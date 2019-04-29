@@ -51,7 +51,7 @@ int init_table(int **table, FILE *db){
         *pos = curr;
     }
 
-    if(!feof(0)) return -1;
+    if(!feof(db)) return -1;
 
     clearerr(db);
 
