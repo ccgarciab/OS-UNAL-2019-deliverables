@@ -35,7 +35,7 @@ int init_table(int **table, FILE *db){
 
     for(int i = 0; i < T_SIZE; i++){
 
-         if(table_hits[i]) table[i]){
+         if(table_hits[i]){
 
              table[i] = calloc(table_hits[i], sizeof(int));
          }
@@ -48,12 +48,41 @@ int init_table(int **table, FILE *db){
         int h = hash(pet->name);
         int *pos = table[h];
         for(;*pos; pos++);
-        pos = curr;
+        *pos = curr;
     }
 
     if(!feof(0)) return -1;
 
     clearerr(db);
+
+    return 0;
+}
+
+int insert_val_at_pos(int **table, int val, int pos){
+
+    int *ptr = table[pos];
+
+    if(!ptr){
+
+        ptr = calloc(2, sizeof(int));
+
+        if(!ptr) return -1;
+
+        ptr[0] = val;
+        table[pos] = ptr;
+        return 0;
+    }
+
+    int len = 0;
+    for(; ptr[len]; len++);
+
+    int *new_ptr = realloc(ptr, len + 2);
+
+    if(!new_ptr) return -1;
+
+    table[pos] = new_ptr;
+    table[pos][len] = val;
+    table[pos][len + 1] = 0;
 
     return 0;
 }
