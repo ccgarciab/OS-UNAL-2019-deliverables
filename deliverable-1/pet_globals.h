@@ -11,4 +11,6 @@ typedef struct dogType{
     float weight;
     char sex;
     int doc_id;
+    int prev;
+    int next;
 } dogType;
