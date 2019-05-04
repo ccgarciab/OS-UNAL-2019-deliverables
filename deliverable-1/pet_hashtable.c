@@ -98,23 +98,37 @@ int get_index(node *table, char *name){
         if(d == table[h].signature) return h;
     }
 
-    return 0;
+    return -1;
 }
 
 int get_line(node *table, char *name){
 
     int index = get_index(table, name);
 
-    return index ? table[index].line : 0;
+    return index < 0 ? 0 : table[index].line;
 }
 
 int update_line(node *table, char *name, int newln){
 
     int index = get_index(table, name);
 
-    if(!index) return 0;
+    if(index < 0) return 0;
 
     table[index].line = newln;
+
+    return 1;
+}
+
+
+int delete_line(node *table, char *name){
+
+    int index = get_index(table, name);
+
+    if(index < 0) return 0;
+
+    table[index].line = -1;
+
+    table[index].signature = -1;
 
     return 1;
 }
