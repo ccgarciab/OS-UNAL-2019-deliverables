@@ -19,11 +19,12 @@ int hash(char *word){           //djb2
    return (int)(hash % T_SIZE);
 }
 
-long digest(char *word){
+long digest(char *word){        //sdbm
 
     unsigned long hash = 0;
     int c;
 
+    //same as hash = hash * 65599 + c, but faster(?)
     while((c = *word++)){
 
         hash = c + (hash << 6) + (hash << 16) - hash;
@@ -53,11 +54,8 @@ int init_table(node *table, FILE *db){
             int h = hash(curr->name);
             long d = digest(curr->name);
 
-            if(!table[h].line){
+            if(!table[h].line);
 
-                table[h].line = line_index;
-                table[h].signature = d;
-            }
             else if(d != table[h].signature){
 
                 for(int i = 0; table[h].line; i++){
@@ -65,6 +63,11 @@ int init_table(node *table, FILE *db){
                     h += (i * i);
                 }
             }
+
+            else continue;
+
+            table[h].line = line_index;
+            table[h].signature = d;
         }
 
         elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
