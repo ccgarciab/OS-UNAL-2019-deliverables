@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "pet_globals.h"
+#include "error_handle.h"
 
 #define BUF_SIZE 700000
 
@@ -38,6 +39,8 @@ int init_table(node *table, FILE *db){
 
     dogType *buffer = malloc(sizeof(dogType) * BUF_SIZE);
 
+    if(!buffer) sys_error("Malloc failure in init_table\n");
+
     size_t elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
     int line_index = 1;
 
@@ -54,8 +57,8 @@ int init_table(node *table, FILE *db){
                 h += (i * i);
                 if(T_SIZE <= h){
 
-                    printf("Droping %s \nCan't init table\n", curr->name);
                     free(buffer);
+                    sys_error("Accessing out of h-table bounds\n");
                     return -2;
                 }
             }
