@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "pet_globals.h"
 
@@ -60,6 +61,7 @@ int init_table(node *table, FILE *db){
 
                 for(int i = 0; table[h].line; i++){
 
+                    assert(h < T_SIZE);
                     h += (i * i);
                 }
             }
@@ -79,4 +81,40 @@ int init_table(node *table, FILE *db){
     clearerr(db);
 
     return result;
+}
+
+int get_index(node *table, char *name){
+
+    int h = hash(name);
+    long d = digest(name);
+
+    if(d == table[h].signature) return h;
+
+    for(int i = 1; table[h].line; i++){
+
+        h += i * i;
+        assert(h < T_SIZE);
+
+        if(d == table[h].signature) return h;
+    }
+
+    return 0;
+}
+
+int get_line(node *table, char *name){
+
+    int index = get_index(table, name);
+
+    return index ? table[index].line : 0;
+}
+
+int update_line(node *table, char *name, int newln){
+
+    int index = get_index(table, name);
+
+    if(!index) return 0;
+
+    table[index].line = newln;
+
+    return 1;
 }
