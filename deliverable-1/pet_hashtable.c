@@ -55,21 +55,22 @@ int init_table(node *table, FILE *db){
             int h = hash(curr->name);
             long d = digest(curr->name);
 
-            if(!table[h].line);
+            for(int i = 0; table[h].signature && table[h].signature != d; i++){
 
-            else if(d != table[h].signature){
+                h += (i * i);
+                if(T_SIZE <= h){
 
-                for(int i = 0; table[h].line; i++){
-
-                    assert(h < T_SIZE);
-                    h += (i * i);
+                    printf("Droping %s \nCan't init table\n", curr->name);
+                    free(buffer);
+                    return -2;
                 }
             }
 
-            else continue;
+            if(!table[h].line){
 
-            table[h].line = line_index;
-            table[h].signature = d;
+                table[h].line = line_index;
+                table[h].signature = d;
+            }
         }
 
         elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
@@ -90,11 +91,9 @@ int get_index(node *table, char *name){
 
     if(d == table[h].signature) return h;
 
-    for(int i = 1; table[h].line; i++){
+    for(int i = 1; h < T_SIZE && table[h].line; i++){
 
         h += i * i;
-        assert(h < T_SIZE);
-
         if(d == table[h].signature) return h;
     }
 
