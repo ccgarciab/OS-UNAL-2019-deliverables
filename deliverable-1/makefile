@@ -1,5 +1,5 @@
 #source files
-SRCS = p1-dogProgram.c pet_input.c pet_hashtable.c
+SRCS = p1-dogProgram.c pet_input.c pet_hashtable.c pet_output.c
 
 #target name
 TARG = dogProgram
