@@ -1,5 +1,5 @@
 #define PATH "dataDogs.dat"
-#define T_SIZE 1009
+#define T_SIZE 100151
 
 typedef struct dogType{
 
@@ -14,3 +14,9 @@ typedef struct dogType{
     int prev;
     int next;
 } dogType;
+
+typedef struct node{
+
+    int line;
+    long signature;
+} node;

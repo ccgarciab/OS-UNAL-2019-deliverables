@@ -3,6 +3,8 @@
 
 #include "pet_globals.h"
 
+#define BUF_SIZE 700000
+
 int hash(char *word){           //djb2
 
    unsigned long hash = 5381;
@@ -17,72 +19,61 @@ int hash(char *word){           //djb2
    return (int)(hash % T_SIZE);
 }
 
-int init_table(int **table, FILE *db){
+long digest(char *word){
 
-    int *table_hits = calloc(T_SIZE, sizeof(int));
+    unsigned long hash = 0;
+    int c;
 
-    dogType *pet = malloc(sizeof(dogType));
+    while((c = *word++)){
 
-    while(fread(pet, sizeof(dogType), 1, db)){
-
-         int h = hash(pet->name);
-         table_hits[h]++;
+        hash = c + (hash << 6) + (hash << 16) - hash;
     }
 
-    if(!feof(db)) return -1;
-
-    clearerr(db);
-
-    for(int i = 0; i < T_SIZE; i++){
-
-         if(table_hits[i]){
-
-             table[i] = calloc(table_hits[i], sizeof(int));
-         }
-    }
-
-    rewind(db);
-
-    for(int curr = 0; fread(pet, sizeof(dogType), 1, db); curr++){
-
-        int h = hash(pet->name);
-        int *pos = table[h];
-        for(;*pos; pos++);
-        *pos = curr;
-    }
-
-    if(!feof(db)) return -1;
-
-    clearerr(db);
-
-    return 0;
+    return hash;
 }
 
-int insert_val_at_pos(int **table, int val, int pos){
+int init_table(node *table, FILE *db){
 
-    int *ptr = table[pos];
+    dogType *buffer = malloc(sizeof(dogType) * BUF_SIZE);
 
-    if(!ptr){
+    if(!fread(buffer, sizeof(dogType), 1, db)){
 
-        ptr = calloc(2, sizeof(int));
-
-        if(!ptr) return -1;
-
-        ptr[0] = val;
-        table[pos] = ptr;
-        return 0;
+        clearerr(db);
+        return -1;
     }
 
-    int len = 0;
-    for(; ptr[len]; len++);
+    size_t elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
+    int line_index = 1;
 
-    int *new_ptr = realloc(ptr, len + 2);
+    while(elems_read){
 
-    if(!new_ptr) return -1;
+        dogType *last = buffer + elems_read;
+        for(dogType *curr = buffer; curr < last; curr++, line_index++){
 
-    table[pos] = new_ptr;
-    table[pos][len] = val;
-    table[pos][len + 1] = 0;
+            int h = hash(curr->name);
+            long d = digest(curr->name);
 
-    return 0;
+            if(!table[h].line){
+
+                table[h].line = line_index;
+                table[h].signature = d;
+            }
+            else if(d != table[h].signature){
+
+                for(int i = 0; table[h].line; i++){
+
+                    h += (i * i);
+                }
+            }
+        }
+
+        elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
+    }
+
+    free(buffer);
+
+    int result = ferror(db);
+    clearerr(db);
+
+    return result;
 }

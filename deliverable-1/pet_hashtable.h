@@ -1,1 +1,1 @@
-int init_table(int **table, FILE *db);
+int init_table(node *table, FILE *db);
