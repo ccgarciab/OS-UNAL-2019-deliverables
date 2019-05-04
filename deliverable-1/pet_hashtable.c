@@ -38,12 +38,6 @@ int init_table(node *table, FILE *db){
 
     dogType *buffer = malloc(sizeof(dogType) * BUF_SIZE);
 
-    if(!fread(buffer, sizeof(dogType), 1, db)){
-
-        clearerr(db);
-        return -1;
-    }
-
     size_t elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
     int line_index = 1;
 
@@ -104,7 +98,7 @@ int get_line(node *table, char *name){
 
     int index = get_index(table, name);
 
-    return index < 0 ? 0 : table[index].line;
+    return index < 0 ? -1 : table[index].line;
 }
 
 int update_line(node *table, char *name, int newln){
