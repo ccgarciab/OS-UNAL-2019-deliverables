@@ -97,6 +97,23 @@ int get_index(node *table, char *name){
     return -1;
 }
 
+int insert_new_line(node *table, char *name, int line){
+
+    int h = hash(name);
+    long d = digest(name);
+
+    for(int i = 0; h < T_SIZE && table[h].line; i++){
+
+        h += i * i;
+        if(d == table[h].signature) return -1;
+    }
+
+    table[h].line = line;
+    table[h].signature = d;
+
+    return h;
+}
+
 int get_line(node *table, char *name){
 
     int index = get_index(table, name);
