@@ -9,6 +9,8 @@
 
 #define EDITOR "nano"
 
+
+/*Prints the fields of the [pet] struct to stdin.*/
 void print_pet(dogType *pet){
 
     printf(" name: %s\n \
@@ -23,6 +25,8 @@ sex: %c\n \
        pet-> weight, pet->sex);
 }
 
+/*Prints the fields of the [pet] struct to stdin, including
+    info related to the implementation of on-disk linked lists.*/
 void print_pet_debug(dogType *pet){
 
     print_pet(pet);
@@ -35,6 +39,8 @@ next record: %d\n \
     pet->doc_id, pet->prev, pet->next);
 }
 
+/*Opens a medical record identified with [doc_id]
+    in a text editor.*/
 void open_medical_record(int doc_id){
 
     pid_t pid = fork();

@@ -7,6 +7,7 @@
 
 #define BUF_SIZE 700000
 
+/*Hash function for assignin a table position to a word*/
 int hash(char *word){           //djb2
 
    unsigned long hash = 5381;
@@ -21,6 +22,7 @@ int hash(char *word){           //djb2
    return (int)(hash % T_SIZE);
 }
 
+/*Hash function for resolving collisions*/
 long digest(char *word){        //sdbm
 
     unsigned long hash = 0;
@@ -35,6 +37,9 @@ long digest(char *word){        //sdbm
     return hash;
 }
 
+/*Reads all the structures in [db] and records the line
+    number for a given linked list in the h-table [table].
+    Returns 0 on success.*/
 int init_table(node *table, FILE *db){
 
     dogType *buffer = malloc(sizeof(dogType) * BUF_SIZE);
@@ -81,6 +86,8 @@ int init_table(node *table, FILE *db){
     return result;
 }
 
+/*Returns the index in the table for some [name].
+    If [name] isn't found, returns -1.*/
 int get_index(node *table, char *name){
 
     int h = hash(name);
@@ -97,6 +104,8 @@ int get_index(node *table, char *name){
     return -1;
 }
 
+/*Inserts the value [line] for the key [name] in [table].
+    Returns the index in the table, or -1 if it was duplicated.*/
 int insert_new_line(node *table, char *name, int line){
 
     int h = hash(name);
@@ -114,6 +123,8 @@ int insert_new_line(node *table, char *name, int line){
     return h;
 }
 
+/*Returns the line value for the key [name] in [table],
+    or -1 if [name] wasn't found*/
 int get_line(node *table, char *name){
 
     int index = get_index(table, name);
@@ -121,6 +132,8 @@ int get_line(node *table, char *name){
     return index < 0 ? -1 : table[index].line;
 }
 
+/*Updates the value in [table] for the key [name] with
+    the value [newln]. Returns 1 on success, 0 on failure*/
 int update_line(node *table, char *name, int newln){
 
     int index = get_index(table, name);
@@ -132,7 +145,8 @@ int update_line(node *table, char *name, int newln){
     return 1;
 }
 
-
+/*Deletes value [name] from [table]. Returns 1 on success,
+    0 on failure.*/
 int delete_line(node *table, char *name){
 
     int index = get_index(table, name);

@@ -1,4 +1,7 @@
+//relative path of the file used as database
 #define PATH "dataDogs.dat"
+
+//size of the hashtable used in memory
 #define T_SIZE 100151
 
 typedef struct dogType{
@@ -10,7 +13,7 @@ typedef struct dogType{
     int size;
     float weight;
     char sex;
-    int doc_id;
+    int doc_id; //unique number for naming medical records
     int prev;
     int next;
 } dogType;
@@ -18,5 +21,7 @@ typedef struct dogType{
 typedef struct node{
 
     int line;
+
+    //identifier to avoid collisions
     long signature;
 } node;
