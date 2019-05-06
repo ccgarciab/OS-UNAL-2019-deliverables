@@ -68,16 +68,14 @@ int main(int argc, char* argv[]){
                 break;
            }else{
                printf("Numbers of Pets inside dataDogs.dat: %d\n", total_lines);
-               printf("Please digit the number of register for data visualization: ");
                int numPet;
 
                while(1) {
-                   if(scanf("%d", &numPet)!= EOF){
+                   if((numPet = get_int("Please digit the number of register for data visualization: "))){
                        if (numPet>total_lines || numPet== 0 ){
                            printf("\n");
                            printf("Please insert a number inside the register number of the Data base\n");
                            printf("\n");
-                           printf("Please digit the number of register for data visualization: ");
                        }else{
                            dogType *datos = malloc(sizeof(dogType));
 
@@ -114,6 +112,27 @@ int main(int argc, char* argv[]){
 
 	       break;
 
+            case '3': break;
+
+            case '4':
+
+                ;
+                char name[33];
+                do{
+
+                    printf("enter a pet name to look up: ");
+
+                }while(!get_bounded_str(name, 32));
+                int result = get_line(table, name);
+                if(result != -1){
+
+                    print_list(db, result);
+                }
+                else{
+
+                    printf("pet name not found\n");
+                }
+                break;
 
             default:
                 break;
