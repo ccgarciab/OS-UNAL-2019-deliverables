@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
     dogType pet;
 
     do{
-        system("clear");
+//        system("clear");
         printf("Menu:\n");
         printf("1. Insert a Register\n");
         printf("2. Visualize a Register\n");
