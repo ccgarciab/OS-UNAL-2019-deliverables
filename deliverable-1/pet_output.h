@@ -1,3 +1,7 @@
+/*Prints all dogType structs in the same linked list at [db],
+	starting with the one at [line].*/
+void print_list(FILE *db, int line);
+
 /*Prints the fields of the [pet] struct to stdin.*/
 void print_pet(dogType *pet);
 

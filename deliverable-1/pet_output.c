@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "pet_globals.h"
+#include "pet_file.h"
 #include "pet_output.h"
 
 #include "error_handle.h"
@@ -54,4 +55,21 @@ void open_medical_record(int doc_id){
 
     if(execl(EDITOR, arg, NULL))
         sys_error("exec error\n");
+}
+
+/*Prints all dogType structs in the same linked list at [db],
+    starting with the one at [line].*/
+void print_list(FILE *db, int line){
+
+    dogType pet;
+
+    read_pet_at_line(db, &pet, line);
+
+    while(pet.next != -1){
+
+        print_pet(&pet);
+        read_pet_at_line(db, &pet, pet.next);
+    }
+
+    print_pet(&pet);
 }
