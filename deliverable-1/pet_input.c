@@ -116,3 +116,18 @@ void fill_pet_info(dogType *pet){
         break;
     }
 }
+
+/*Get a non-negative int from stdin*/
+int get_int(char *msg){
+
+    long n;
+    char *numbuf[20];
+    while(!get_bounded_str(numbuf, 10) ||
+          !is_int_str(numbuf) ||
+          (n = atol(numbuf)) > 2147483647){
+
+        printf("%s", msg);
+    }
+
+    return (int)n;
+}
