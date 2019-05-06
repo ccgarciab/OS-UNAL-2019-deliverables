@@ -24,8 +24,14 @@ int main(int argc, char* argv[]){
     dogType pet;
 
     do{
+        system("clear");
+        printf("Menu:\n");
+        printf("1. Insert a Register\n");
+        printf("2. Visualize a Register\n");
+        printf("3. Erase a Register\n");
+        printf("4. Search a Register\n");
+        printf("5. Quit\n");
 
-        printf("opt: ");
         if(!get_bounded_str(opt, 1)) continue;
 
         switch(opt[0]){
@@ -53,7 +59,8 @@ int main(int argc, char* argv[]){
 
 
            fseek(db, 0, SEEK_END);
-           printf("Numbers of Pets inside dataDogs.dat: %d\n", get_total_lines());
+           int total_lines = get_total_lines();
+           printf("Numbers of Pets inside dataDogs.dat: %d\n", total_lines);
            printf("Please digit the number of register for data visualization: ");
            int numPet;
 
@@ -62,36 +69,40 @@ int main(int argc, char* argv[]){
                exit(-1);
            }
 
-           dogType *datos = malloc(sizeof(dogType));
+           if (numPet>total_lines){
+               printf("Please insert a number inside the register number inside of the Data base\n");
+           }else{
+               dogType *datos = malloc(sizeof(dogType));
 
-           fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
-           int readVeredict = fread(datos, sizeof(dogType), 1, db);
+               fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
+               int readVeredict = fread(datos, sizeof(dogType), 1, db);
 
-           if (readVeredict == 0 ){
-               perror("Read Error\n");
-               exit(-1);
+               if (readVeredict == 0 ){
+                   perror("Read Error\n");
+                   exit(-1);
+               }
+
+               printf("-------------------------------------------------\n");
+               printf("Name: %s\n", datos->name);
+               printf("Type:   %s\n", datos->type);
+               printf("Age:   %i\n", datos->age);
+               printf("Breed:   %s\n", datos->breed);
+               printf("Size: %i\n", datos->size);
+               printf("Weight:   %f\n", datos->weight);
+               printf("Sex: %c\n", datos->sex);
+               printf("Next: %d\n", datos->next);
+               printf("-------------------------------------------------\n");
+
+               free(datos);
            }
-
-           printf("-------------------------------------------------\n");
-           printf("Name: %s\n", datos->name);
-           printf("Type:   %s\n", datos->type);
-           printf("Age:   %i\n", datos->age);
-           printf("Breed:   %s\n", datos->breed);
-           printf("Size: %i\n", datos->size);
-           printf("Weight:   %f\n", datos->weight);
-           printf("Sex: %c\n", datos->sex);
-           printf("Next: %d\n", datos->next);
-           printf("-------------------------------------------------\n");
-
-           free(datos);
-
 	       break;
+
 
             default:
                 break;
         }
 
-    }while(opt[0] != 'q');
+    }while(opt[0] != '5');
 
     fclose(db);
 }
