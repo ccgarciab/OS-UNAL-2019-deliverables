@@ -57,12 +57,20 @@ int main(int argc, char* argv[]){
            printf("Please digit the number of register for data visualization: ");
            int numPet;
 
-           scanf(" %d\n",&numPet);
+           if (scanf("%d", &numPet)== EOF) {
+               perror("Error in Scanf");
+               exit(-1);
+           }
 
            dogType *datos = malloc(sizeof(dogType));
 
            fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
-           fread(numPet, sizeof(dogType), 1, db);
+           int readVeredict = fread(datos, sizeof(dogType), 1, db);
+
+           if (readVeredict == 0 ){
+               perror("Read Error\n");
+               exit(-1);
+           }
 
            printf("-------------------------------------------------\n");
            printf("Name: %s\n", datos->name);
@@ -71,8 +79,8 @@ int main(int argc, char* argv[]){
            printf("Breed:   %s\n", datos->breed);
            printf("Size: %i\n", datos->size);
            printf("Weight:   %f\n", datos->weight);
-           printf("Gender: %c\n", datos->gender);
-           printf("Next doc: %d\n", datos->next_doc);
+           printf("Sex: %c\n", datos->sex);
+           printf("Next: %d\n", datos->next);
            printf("-------------------------------------------------\n");
 
            free(datos);
