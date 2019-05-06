@@ -9,6 +9,8 @@ typedef struct delResult{
     char word_repl[33];
 } delResult;
 
+void set_total_lines(int n);
+
 /*Searches the en of the in-disk linked list that starts
     at [firstln] in [db] and appends [pet] to it*/
 void add_pet_from_line(FILE *db, dogType *pet, int firstln);

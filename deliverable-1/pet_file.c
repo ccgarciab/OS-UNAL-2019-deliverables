@@ -15,6 +15,11 @@ int get_total_lines(){
     return line_counter;
 }
 
+void set_total_lines(int n){
+
+    line_counter = n;
+}
+
 /*Fill the information of a pet from the line # [line]
     in [db] into [pet]*/
 void read_pet_at_line(FILE *db, dogType *pet, int line){
