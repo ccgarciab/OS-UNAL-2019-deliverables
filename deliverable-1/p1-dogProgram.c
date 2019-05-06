@@ -49,6 +49,36 @@ int main(int argc, char* argv[]){
                 }
                 break;
 
+	   case '2':
+	       
+
+           fseek(db, 0, SEEK_END);
+           printf("Numbers of Pets inside dataDogs.dat: %d\n", get_total_lines());
+           printf("Please digit the number of register for data visualization: ");
+           int numPet;
+
+           scanf(" %d\n",%numPet);
+
+           dogType *datos = malloc(sizeof(dogType));
+
+           fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
+           fread(numPet, sizeof(dogType), 1, db);
+
+           printf("-------------------------------------------------\n");
+           printf("Name: %s\n", datos->name);
+           printf("Type:   %s\n", datos->type);
+           printf("Age:   %i\n", datos->age);
+           printf("Breed:   %s\n", datos->breed);
+           printf("Size: %i\n", datos->size);
+           printf("Weight:   %f\n", datos->weight);
+           printf("Gender: %c\n", datos->gender);
+           printf("Next doc: %d\n", datos->next_doc);
+           printf("-------------------------------------------------\n");
+
+           free(datos);
+
+	       break;
+
             default:
                 break;
         }
