@@ -77,7 +77,6 @@ void fill_pet_info(dogType *pet){
     for(int i = 0; i < 4; i++){
 
         while(1){
-
             printf("%s: ", prompts[i]);
             if(!get_bounded_str(ptrs[i], sizes[i])) continue;
             if(ptrs[i][0] == '\0') continue;
