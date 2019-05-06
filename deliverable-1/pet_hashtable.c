@@ -141,6 +141,7 @@ int update_line(node *table, char *name, int newln){
     if(index < 0) return 0;
 
     table[index].line = newln;
+    if(newln == -1) table[index].signature = -1;
 
     return 1;
 }

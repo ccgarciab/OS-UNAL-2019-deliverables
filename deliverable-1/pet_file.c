@@ -1,7 +1,10 @@
-#include "stdio.h"
-#include "unistd.h"
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "pet_globals.h"
+#include "pet_file.h"
+
 #include "error_handle.h"
 
 int line_counter = 0;
@@ -35,7 +38,16 @@ void overwrite_last_pet(FILE *db, dogType *new_pet){
 }
 
 
-/*Searches the en of the in-disk linked list that starts
+void replace_pet_at_line(FILE *db, dogType *new_pet, int line){
+
+    if(fseek(db, line * sizeof(dogType), SEEK_SET) < 0)
+        sys_error("fseek_error\n");
+
+    if(!fwrite(new_pet, sizeof(dogType), 1, db))
+        sys_error("fwrite error\n");
+}
+
+/*Searches the end of the in-disk linked list that starts
     at [firstln] in [db] and appends [pet] to it*/
 void add_pet_from_line(FILE *db, dogType *pet, int firstln){
 
@@ -69,51 +81,119 @@ void add_pet_from_line(FILE *db, dogType *pet, int firstln){
         sys_error("fwrite error at add_pet (appending)\n");
 }
 
-/*Removes the structure in the line# [line] in [db],
-    closing the gap in the adequate linked list*/
-void del_pet(FILE *db, int line){
+void bridge_over(FILE *db, dogType *pet){
 
     dogType temp;
-    read_pet_at_line(db, &temp, line);
 
-    int prev_line = temp.prev;
-    int next_line = temp.next;
+    if(pet->prev != -1){
 
-    if(0 <= prev_line){
-
-        read_pet_at_line(db, &temp, prev_line);
-        temp.next = next_line;
+        read_pet_at_line(db, &temp, pet->prev);
+        temp.next = pet->next;
         overwrite_last_pet(db, &temp);
     }
 
-    if(0 <= next_line){
+    if(pet->next != -1){
 
-        read_pet_at_line(db, &temp, next_line);
-        temp.prev = prev_line;
+        read_pet_at_line(db, &temp, pet->next);
+        temp.prev = pet->prev;
         overwrite_last_pet(db, &temp);
     }
+}
 
-    if(fseek(db, -1 * sizeof(dogType), SEEK_END) < 0)
-        sys_error("fseek error\n");
+/*Removes the structure in the line# [line] in [db],
+    and reports the modifications to do in the h-table.*/
+void del_pet(FILE *db, int line, delResult *res){
 
-    dogType repl;
+    dogType to_del, temp, temp_2;
+    read_pet_at_line(db, &to_del, line);
 
-    if(!fread(&repl, sizeof(dogType), 1, db))
-        sys_error("fread error\n");
+    if(line == line_counter){
 
-    prev_line = repl.prev;
+        if(to_del.prev == -1){
 
-    if(0 <= prev_line){
+            res->update_del = 1;
+            res->newln_del = to_del.next;
+        }
 
-        read_pet_at_line(db, &temp, prev_line);
-        temp.next = line;
-        overwrite_last_pet(db, &temp);
+        bridge_over(db, &to_del);
     }
+    else if(to_del.next == line_counter){
 
-    if(fseek(db, (line + 1) * sizeof(dogType), SEEK_SET) < 0)
-        sys_error("fseek error\n");
+        if(to_del.prev != -1){
 
-    overwrite_last_pet(db, &repl);
+            read_pet_at_line(db, &temp, to_del.prev);
+            temp.next = line;
+            overwrite_last_pet(db, &temp);
+        }
+
+        read_pet_at_line(db, &temp, to_del.next);
+        temp.prev = to_del.prev;
+        replace_pet_at_line(db, &temp, line);
+        if(temp.next != -1){
+
+            read_pet_at_line(db, &temp, temp.next);
+            temp.prev = line;
+            overwrite_last_pet(db, &temp);
+        }
+    }
+    else if(to_del.prev == line_counter){
+
+        read_pet_at_line(db, &temp, to_del.prev);
+        if(temp.prev != -1){
+
+            read_pet_at_line(db, &temp_2, temp.prev);
+            temp_2.next = line;
+            overwrite_last_pet(db, &temp_2);
+        }
+        else{
+
+            res->update_del = 1;
+            res->newln_del = line;
+        }
+
+        if(to_del.next != -1){
+
+            read_pet_at_line(db, &temp_2, to_del.next);
+            temp_2.prev = line;
+            overwrite_last_pet(db, &temp_2);
+        }
+
+        temp.next = to_del.next;
+        replace_pet_at_line(db, &temp, line);
+    }
+    else{
+
+        bridge_over(db, &to_del);
+        read_pet_at_line(db, &temp, line_counter);
+
+        if(temp.next != -1){
+
+            read_pet_at_line(db, &temp_2, temp.next);
+            temp_2.prev = line;
+            overwrite_last_pet(db, &temp_2);
+        }
+
+        if(temp.prev != -1){
+
+            read_pet_at_line(db, &temp_2, temp.prev);
+            temp_2.next = line;
+            overwrite_last_pet(db, &temp_2);
+        }
+        else{
+
+            res->update_repl = 1;
+            res->newln_repl = line;
+            strcpy(res->word_repl, temp.name);
+        }
+
+        if(to_del.prev == -1){
+
+            res->update_del = 1;
+            res->newln_del = to_del.next;
+        }
+
+        replace_pet_at_line(db, &temp, line);
+    }
 
     line_counter--;
 
