@@ -50,14 +50,14 @@ int main(int argc, char* argv[]){
                 break;
 
 	   case '2':
-	       
+
 
            fseek(db, 0, SEEK_END);
            printf("Numbers of Pets inside dataDogs.dat: %d\n", get_total_lines());
            printf("Please digit the number of register for data visualization: ");
            int numPet;
 
-           scanf(" %d\n",%numPet);
+           scanf(" %d\n",&numPet);
 
            dogType *datos = malloc(sizeof(dogType));
 
