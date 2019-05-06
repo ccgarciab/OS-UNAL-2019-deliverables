@@ -19,6 +19,9 @@ int main(int argc, char* argv[]){
 
     if(!db) sys_error("can't open file\n");
 
+    int num_lines = init_table(table, db);
+    set_total_lines(num_lines);
+
     char opt[2];
     opt[0] = 'A';
     dogType pet;

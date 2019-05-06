@@ -47,7 +47,7 @@ int init_table(node *table, FILE *db){
     if(!buffer) sys_error("Malloc failure in init_table\n");
 
     size_t elems_read = fread(buffer, sizeof(dogType), BUF_SIZE, db);
-    int line_index = 1;
+    int line_index = 0;
 
     while(elems_read){
 
@@ -83,7 +83,7 @@ int init_table(node *table, FILE *db){
     int result = ferror(db);
     clearerr(db);
 
-    return result;
+    return result != 0 ? -1 : line_index;
 }
 
 /*Returns the index in the table for some [name].
