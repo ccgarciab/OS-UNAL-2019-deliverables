@@ -14,7 +14,9 @@
 /*Prints the fields of the [pet] struct to stdin.*/
 void print_pet(dogType *pet) {
 
-    printf(" name: %s\n \
+printf(
+"*________________________________________________*\n \
+name: %s\n \
 type: %s\n \
 breed: %s\n \
 age: %d years\n \
@@ -32,7 +34,8 @@ void print_pet_debug(dogType *pet) {
 
     print_pet(pet);
 
-    printf("\
+printf(
+"*************************************************\n \
 clinic history id: %d\n \
 previous record: %d\n \
 next record: %d\n \

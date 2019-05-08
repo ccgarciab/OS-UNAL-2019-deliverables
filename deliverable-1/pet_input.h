@@ -12,3 +12,6 @@ int get_bounded_str(char *buffer, unsigned int bound);
 
 /*Get a non-negative int from stdin*/
 int get_int(char *msg);
+
+/*Easily ask for a yes/no question in stdin*/
+int confirmation(char *msg);
