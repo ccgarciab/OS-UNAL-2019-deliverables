@@ -58,15 +58,10 @@ int main(int argc, char *argv[]) {
                 if (line < 0) {
 
                     pet.prev = -1;
-                    printf("la linea es: %i\n", line);
                     line = append_pet(db, &pet);
-                    printf("la linea es: %i\n", line);
                     insert_new_line(table, pet.name, line);
-                    printf("la linea es: %i\n", line);
                 } else {
-                    printf("la linea es: %i\n", line);
                     add_pet_from_line(db, &pet, line);
-                    printf("la linea es: %i\n", line);
                 }
                 break;
 
@@ -97,7 +92,7 @@ int main(int argc, char *argv[]) {
                                 int readVeredict = fread(datos, sizeof(dogType), 1, db);
 
                                 if (readVeredict == 0) {
-                                    perror("Read Error\n");
+                                    sys_error("Read Error\n");
                                     exit(-1);
                                 }
 
@@ -129,7 +124,7 @@ int main(int argc, char *argv[]) {
                                     if (q1[0] == 'y') {
                                         file = fopen(path, "w+");
                                         if (file == NULL) {
-                                            perror("Writting Error");
+                                            sys_error("Writting Error");
                                             exit(-1);
                                         }
 
@@ -164,8 +159,7 @@ int main(int argc, char *argv[]) {
                             }
 
                         } else {
-                            perror("Error in Scanf");
-                            exit(-1);
+                            sys_error("Error in Scanf");
                             break;
                         }
                     }
@@ -177,7 +171,10 @@ int main(int argc, char *argv[]) {
                 int n = get_total_lines();
                 printf("Number of pets in dataDogs.dat: %d\n", n);
                 int input = get_int("number of register to delete: ");
-                if (input <= 0 || n < input) break;
+                if (input <= 0 || n < input){
+                    printf("\nInvalid Register Number\n\n");
+                    break;
+                }
                 input--;
                 dogType d;
                 read_pet_at_line(db, &d, input);
@@ -208,6 +205,7 @@ int main(int argc, char *argv[]) {
                 } else {
                     break;
                 }
+                break;
 
             case '4':
 
@@ -237,8 +235,7 @@ int main(int argc, char *argv[]) {
     int writeVeredict = fclose(db);
 
     if (writeVeredict == EOF) {
-        perror("fclose error");
-        exit(-1);
+        sys_error("fclose error");
     }
     printf("\nGood Bye, Dude!\n\n");
 }
