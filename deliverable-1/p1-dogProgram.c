@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
                 print_pet(&pet);
                 ans = confirmation("Do you want to create it?");
 
-                if(ans){
+                if (ans) {
 
                     if (line < 0) {
 
@@ -104,14 +104,13 @@ int main(int argc, char *argv[]) {
                             } else {
 
                                 dogType *datos = malloc(sizeof(dogType));
-                                if(!datos) sys_error("malloc error\n");
+                                if (!datos) sys_error("malloc error\n");
 
                                 fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
                                 int readVeredict = fread(datos, sizeof(dogType), 1, db);
 
                                 if (readVeredict == 0) {
                                     sys_error("Read Error\n");
-                                    exit(-1);
                                 }
 
                                 print_pet(datos);
@@ -133,19 +132,24 @@ int main(int argc, char *argv[]) {
                                             exit(-1);
                                         }
 
-                                        print_pet(datos);
+                                        //print_pet(datos);
+                                        fprintf(file, "Name: %s\n", datos->name);
+                                        fprintf(file, "Type:   %s\n", datos->type);
+                                        fprintf(file, "Age:   %i\n", datos->age);
+                                        fprintf(file, "Breed:   %s\n", datos->breed);
+                                        fprintf(file, "Size: %i\n", datos->size);
+                                        fprintf(file, "Weight:   %f\n", datos->weight);
+                                        fprintf(file, "Sex: %c\n", datos->sex);
 
                                         free(datos);
                                         fclose(file);
                                         strcat(command, path);
                                         system(command);
-                                    }
-                                    else {
+                                    } else {
 
                                         break;
                                     }
-                                }
-                                else {
+                                } else {
 
                                     ans = confirmation("There is a Clinical History existent, do you want see it?");
                                     if (ans) {
@@ -159,8 +163,7 @@ int main(int argc, char *argv[]) {
                                 break;
                             }
 
-                        }
-                        else {
+                        } else {
 
                             sys_error("Error in Scanf");
                             break;
@@ -176,7 +179,7 @@ int main(int argc, char *argv[]) {
                 printf("Number of pets in dataDogs.dat: %d\n\n", n);
                 int input = get_int("number of register to delete: ");
 
-                if (input <= 0 || n < input){
+                if (input <= 0 || n < input) {
 
                     printf("\nInvalid Register Number\n\n");
                     break;
@@ -205,6 +208,18 @@ int main(int argc, char *argv[]) {
                         word_to_upper(name);
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
+                    char fileName[33];
+                    sprintf(fileName, "%d", d.doc_id);
+                    strcat(fileName, ".txt");
+                    int exist = cfileexists(fileName);
+                    if (exist) {
+                        if (remove(fileName) == 0) printf("Clinical history Deleted successfully\n\n");
+                        else sys_error("Unable to delete the clinical history\n\n");
+                    } else {
+                        printf("Clinical history no exist\n");
+
+                    }
+
                 }
                 break;
 
@@ -218,7 +233,7 @@ int main(int argc, char *argv[]) {
 
                 char msg[100];
                 strcpy(msg, "confirm search: ");
-		strcat(msg, name);
+                strcat(msg, name);
                 ans = confirmation(msg);
 
                 if (ans) {
@@ -238,7 +253,7 @@ int main(int argc, char *argv[]) {
             case '5':
 
                 ans = confirmation("do you want to close the program?");
-                if(ans) opt[0] = '\0';
+                if (ans) opt[0] = '\0';
 
             default:
                 break;

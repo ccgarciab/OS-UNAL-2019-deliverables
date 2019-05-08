@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-
+#include <time.h>
 #include "pet_globals.h"
 #include "error_handle.h"
 
@@ -40,7 +40,7 @@ void randomStructs(int numberPets, char names[][33], char breeds[][17], char typ
     dogType *pets = (dogType *) malloc(sizeof(dogType) * numberPets);
     randpet = malloc(sizeof(dogType));
 
-    if (randpet == NULL)sys_error("malloc error")
+    if (randpet == NULL) sys_error("malloc error");
 
     file = fopen("dataDogs.dat", "wb+");
 
@@ -58,7 +58,7 @@ void randomStructs(int numberPets, char names[][33], char breeds[][17], char typ
         randpet->sex = (drand48() > 0.5) ? 'H' : 'M';
         randpet->next = -1;
         randpet->prev = -1;
-        randpet->doc_id = -1;
+        randpet->doc_id = i + 1;
 
         pets[i] = *randpet;
     }

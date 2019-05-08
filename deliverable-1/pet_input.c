@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <sys/stat.h>
 #include "pet_globals.h"
 
 /*Read a line up to [bound] chars.
@@ -134,16 +134,16 @@ int get_int(char *msg) {
 
 /*Transforms the alphabetic chars in a string to uppercase,
     in place.*/
-void word_to_upper(char *word){
+void word_to_upper(char *word) {
 
-    for(; *word; word++){
+    for (; *word; word++) {
 
-        *word = (char)toupper(*word);
+        *word = (char) toupper(*word);
     }
 }
 
 /*Easily ask for a yes/no question in stdin*/
-int confirmation(char *msg){
+int confirmation(char *msg) {
 
     char yn[2] = "";
 
@@ -158,4 +158,19 @@ int confirmation(char *msg){
     }
 
     return yn[0] == 'y' || yn[0] == 'Y';
+}
+
+
+
+/*
+ * Check if a file exist using stat() function
+ * return 1 if the file exist otherwise return 0
+ */
+int cfileexists(const char* filename){
+    struct stat buffer;
+    int exist = stat(filename,&buffer);
+    if(exist == 0)
+        return 1;
+    else // -1
+        return 0;
 }

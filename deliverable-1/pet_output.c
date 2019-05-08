@@ -14,8 +14,8 @@
 /*Prints the fields of the [pet] struct to stdin.*/
 void print_pet(dogType *pet) {
 
-printf(
-"*________________________________________________*\n \
+    printf(
+            "*________________________________________________*\n \
 name: %s\n \
 type: %s\n \
 breed: %s\n \
@@ -24,8 +24,8 @@ size: %d cm\n \
 weight: %f kg\n \
 sex: %c\n \
 *________________________________________________*\n",
-           pet->name, pet->type, pet->breed, pet->age, pet->size,
-           pet->weight, pet->sex);
+            pet->name, pet->type, pet->breed, pet->age, pet->size,
+            pet->weight, pet->sex);
 }
 
 /*Prints the fields of the [pet] struct to stdin, including
@@ -34,13 +34,13 @@ void print_pet_debug(dogType *pet) {
 
     print_pet(pet);
 
-printf(
-"*************************************************\n \
+    printf(
+            "*************************************************\n \
 clinic history id: %d\n \
 previous record: %d\n \
 next record: %d\n \
 **************************************************\n",
-           pet->doc_id, pet->prev, pet->next);
+            pet->doc_id, pet->prev, pet->next);
 }
 
 /*Opens a medical record identified with [doc_id]

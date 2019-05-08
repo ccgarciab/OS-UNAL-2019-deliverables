@@ -1,6 +1,6 @@
 /*Struct for collecting all the information to update
     the h-table after a deletion in the file.*/
-typedef struct delResult{
+typedef struct delResult {
 
     int update_del;
     int newln_del;
@@ -30,3 +30,5 @@ int get_total_lines();
 /*Fill the information of a pet from the line # [line]
     in [db] into [pet]*/
 void read_pet_at_line(FILE *db, dogType *pet, int line);
+
+int cfileexists(const char* filename);

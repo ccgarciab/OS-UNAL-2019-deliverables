@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "pet_globals.h"
+#include "pet_input.h"
 #include "error_handle.h"
 
 #define BUF_SIZE 700000
@@ -50,9 +51,11 @@ int init_table(node *table, FILE *db) {
 
     while (elems_read) {
 
+
         dogType *last = buffer + elems_read;
         for (dogType *curr = buffer; curr < last; curr++, line_index++) {
 
+            word_to_upper(curr->name);
             int h = hash(curr->name);
             long d = digest(curr->name);
 
@@ -67,7 +70,7 @@ int init_table(node *table, FILE *db) {
                 }
             }
 
-            if (!table[h].line) {
+            if (!table[h].signature) {
 
                 table[h].line = line_index;
                 table[h].signature = d;
