@@ -113,7 +113,9 @@ void del_pet(FILE *db, int line, delResult *res){
     dogType to_del, temp, temp_2;
     read_pet_at_line(db, &to_del, line);
 
-    if(line == line_counter){
+    int lc = line_counter - 1;
+
+    if(line == lc){
 
         if(to_del.prev == -1){
 
@@ -123,7 +125,7 @@ void del_pet(FILE *db, int line, delResult *res){
 
         bridge_over(db, &to_del);
     }
-    else if(to_del.next == line_counter){
+    else if(to_del.next == lc){
 
         if(to_del.prev != -1){
 
@@ -142,7 +144,7 @@ void del_pet(FILE *db, int line, delResult *res){
             overwrite_last_pet(db, &temp);
         }
     }
-    else if(to_del.prev == line_counter){
+    else if(to_del.prev == lc){
 
         read_pet_at_line(db, &temp, to_del.prev);
         if(temp.prev != -1){
@@ -170,7 +172,7 @@ void del_pet(FILE *db, int line, delResult *res){
     else{
 
         bridge_over(db, &to_del);
-        read_pet_at_line(db, &temp, line_counter);
+        read_pet_at_line(db, &temp, lc);
 
         if(temp.next != -1){
 

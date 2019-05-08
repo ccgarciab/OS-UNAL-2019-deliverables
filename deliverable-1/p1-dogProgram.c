@@ -192,6 +192,8 @@ int main(int argc, char* argv[]){
                 if(yn[0] == 'Y' || yn[0] == 'y'){
 
                     delResult dr;
+                    dr.update_del = 0;
+                    dr.update_repl = 0;
                     del_pet(db, input, &dr);
                     if(dr.update_del){
 
