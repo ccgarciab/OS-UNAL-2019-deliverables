@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "pet_globals.h"
 #include "error_handle.h"
@@ -39,7 +38,7 @@ long digest(char *word) {        //sdbm
 
 /*Reads all the structures in [db] and records the line
     number for a given linked list in the h-table [table].
-    Returns 0 on success.*/
+    Returns the number of structs loaded on success, -1 otherwise.*/
 int init_table(node *table, FILE *db) {
 
     dogType *buffer = malloc(sizeof(dogType) * BUF_SIZE);
