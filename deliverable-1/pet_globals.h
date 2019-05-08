@@ -13,9 +13,9 @@ typedef struct dogType{
     int size;
     float weight;
     char sex;
-    int doc_id; //unique number for naming medical records
-    int prev;
-    int next;
+    int doc_id; // Unique number for naming medical records
+    int prev; // Line indicator of the next struct that has the same Hash Value
+    int next; // Line indicator of the last struct that has the same Hash Value
 } dogType;
 
 typedef struct node{
@@ -24,4 +24,5 @@ typedef struct node{
 
     //identifier to avoid collisions
     long signature;
+
 } node;

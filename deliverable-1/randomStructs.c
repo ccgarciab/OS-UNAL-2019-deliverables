@@ -2,106 +2,83 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <time.h>
 
-typedef struct dogType{
-
-    char name[33];
-    char type[33];
-    int age;
-    char breed[17];
-    int size;
-    float weight;
-    char sex;
-    int doc_id; //unique number for naming medical records
-    int prev;
-    int next;
-} dogType;
+#include "pet_globals.h"
+#include "error_handle.h"
 
 int namesSize = 1000, breedsSize = 5, typesSize = 6, globalTmpSize = 33;
 
-void inserting(char fileName[], char data[][globalTmpSize]){
+/*
+ * Reads the FileName and put the data (words
+ * separated by breaklines) inside the data array
+ */
+void inserting(char fileName[], char data[][globalTmpSize]) {
 
     FILE *file;
-
     file = fopen(fileName, "r");
 
-    if(file == NULL){
+    if (file == NULL) sys_error("Reading File error");
 
-	perror("Reading File error");
-        exit(-1);
-    }
-    for(int i = 0; !feof(file); i++) fscanf(file, " %s", data[i]);
+    for (int i = 0; !feof(file); i++) fscanf(file, " %s", data[i]);
+
     int closeVeredict = fclose(file);
 
-    if(closeVeredict  == EOF){
+    if (closeVeredict == EOF) sys_error("Closing File error");
 
-	      perror("Closing File error");
-        exit(-1);
-    }
 }
 
-void randomStructs(int numberPets, char names[][33], char breeds[][17], char types[][33]){
+/*
+ * Put a "numberPets" structs inside dataDogs.dat File using random
+ * data generated using the "names", "breeds" and "types" data arrays.
+ */
+void randomStructs(int numberPets, char names[][33], char breeds[][17], char types[][33]) {
 
 
     FILE *file;
-
-
     dogType *randpet;
 
-    dogType *pets = (dogType *)malloc (sizeof(dogType)*numberPets);
-
+    dogType *pets = (dogType *) malloc(sizeof(dogType) * numberPets);
     randpet = malloc(sizeof(dogType));
-    if(randpet == NULL){
-	     perror("malloc error");
-        exit(-1);
-    }
+
+    if (randpet == NULL)sys_error("malloc error")
 
     file = fopen("dataDogs.dat", "wb+");
-    if(file == NULL){
-	       perror("Open file error");
-        exit(-1);
-    }
+
+    if (file == NULL) sys_error("Open file error");
 
     srand48(time(NULL)); //CPU time Seed
 
-    for(int i = 0; i < numberPets; i++){
-      strcpy(randpet->name, names[(int)(drand48()*namesSize)]);
-      strcpy(randpet->type, types[(int)(drand48()*typesSize)]);
-      randpet->age = (int)(drand48()*15);
-      strcpy(randpet->breed, breeds[(int)(drand48()*breedsSize)]);
-      randpet->size = (int)(drand48()*180);
-      randpet->weight = drand48()*80;
-      randpet->sex = (drand48() > 0.5)?'H':'M';
-      randpet->next = -1;
-      randpet->prev = -1;
-      randpet->doc_id = -1;
+    for (int i = 0; i < numberPets; i++) {
+        strcpy(randpet->name, names[(int) (drand48() * namesSize)]);
+        strcpy(randpet->type, types[(int) (drand48() * typesSize)]);
+        randpet->age = (int) (drand48() * 15);
+        strcpy(randpet->breed, breeds[(int) (drand48() * breedsSize)]);
+        randpet->size = (int) (drand48() * 180);
+        randpet->weight = drand48() * 80;
+        randpet->sex = (drand48() > 0.5) ? 'H' : 'M';
+        randpet->next = -1;
+        randpet->prev = -1;
+        randpet->doc_id = -1;
 
-      pets[i] = *randpet;
+        pets[i] = *randpet;
     }
 
-        int writeVeredict = fwrite(pets, sizeof(dogType), numberPets, file);
+    int writeVeredict = fwrite(pets, sizeof(dogType), numberPets, file);
 
-        if(writeVeredict < numberPets){
-
-           perror("Writting file error");
-          exit(-1);
-        }
-
+    if (writeVeredict < numberPets) sys_error("Writting file error");
 
     free(randpet);
-        free(pets);
+    free(pets);
 
     writeVeredict = fclose(file);
-    if(writeVeredict == EOF){
-	     perror("fclose error");
-        exit(-1);
-    }
+
+    if (writeVeredict == EOF) sys_error("fclose error");
 
 }
 
 
 int main() {
+
     dogType *myDogType = malloc(sizeof(dogType));
     char names[namesSize][sizeof(myDogType->name)], breeds[breedsSize][sizeof(myDogType->breed)],
             types[typesSize][sizeof(myDogType->name)];
@@ -112,12 +89,10 @@ int main() {
     inserting("names.txt", names);
     inserting("types.txt", types);
 
-    globalTmpSize= sizeof(myDogType->breed);
+    globalTmpSize = sizeof(myDogType->breed);
     inserting("breeds.txt", breeds);
 
     randomStructs(numStructs, names, breeds, types);
-
-	return 0;
-
+    return 0;
 }
 
