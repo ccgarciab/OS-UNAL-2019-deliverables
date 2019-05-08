@@ -116,6 +116,7 @@ void fill_pet_info(dogType *pet){
     }
 }
 
+
 /*Get a non-negative int from stdin*/
 int get_int(char *msg){
 
