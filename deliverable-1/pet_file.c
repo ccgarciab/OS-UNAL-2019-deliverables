@@ -72,7 +72,8 @@ void add_pet_from_line(FILE *db, dogType *pet, int firstln){
         currln = nextln;
     }
 
-    temp.next = ++line_counter;
+    temp.next = line_counter;
+    line_counter++;
 
     overwrite_last_pet(db, &temp);
 
@@ -216,5 +217,7 @@ int append_pet(FILE *db, dogType *pet){
     if(!fwrite(pet, sizeof(dogType), 1, db))
         sys_error("fread error\n");
 
-    return ++line_counter;
+    line_counter++;
+
+    return line_counter - 1;
 }
