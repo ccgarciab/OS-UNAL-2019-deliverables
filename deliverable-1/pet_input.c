@@ -131,3 +131,13 @@ int get_int(char *msg) {
 
     return (int) n;
 }
+
+/*Transforms the alphabetic chars in a string to uppercase,
+    in place.*/
+void word_to_upper(char *word){
+
+    for(; *word; word++){
+
+        *word = (char)toupper(*word);
+    }
+}

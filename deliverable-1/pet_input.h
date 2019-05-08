@@ -1,3 +1,7 @@
+/*Transforms the alphabetic chars in a string to uppercase,
+    in place.*/
+void word_to_upper(char *word);
+
 /*Uses stdin to get all info for a pet record.
     Handles invalid input by 'asking' again*/
 void fill_pet_info(dogType *pet);

@@ -6,7 +6,7 @@ TARG = dogProgram
 
 #compiler, compile flags, linking flags
 CC = gcc
-OPTS = -Wall -O
+OPTS = -Wall -O -Wno-unused-result
 #LIBS =
 
 OBJS = $(SRCS:.c=.o)

@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
     set_total_lines(num_lines);
 
     char opt[2];
+    char name[33];
     opt[0] = 'A';
     dogType pet;
 
@@ -51,7 +52,9 @@ int main(int argc, char *argv[]) {
                 pet.doc_id = ++curr_hist;
 
                 fill_pet_info(&pet);
-                int line = get_line(table, pet.name);
+                strcpy(name, pet.name);
+                word_to_upper(name);
+                int line = get_line(table, name);
 
                 pet.next = -1;
 
@@ -59,8 +62,9 @@ int main(int argc, char *argv[]) {
 
                     pet.prev = -1;
                     line = append_pet(db, &pet);
-                    insert_new_line(table, pet.name, line);
+                    insert_new_line(table, name, line);
                 } else {
+
                     add_pet_from_line(db, &pet, line);
                 }
                 break;
@@ -97,7 +101,7 @@ int main(int argc, char *argv[]) {
                                     exit(-1);
                                 }
 
-                                print_pet(datos):
+                                print_pet(datos);
 
                                 char path[33], command[38] = "gedit ";
 
@@ -180,24 +184,27 @@ int main(int argc, char *argv[]) {
                     del_pet(db, input, &dr);
                     if (dr.update_del) {
 
-                        update_line(table, d.name, dr.newln_del);
+                        strcpy(name, d.name);
+                        word_to_upper(name);
+                        update_line(table, name, dr.newln_del);
                     }
                     if (dr.update_repl) {
 
+                        strcpy(name, dr.word_repl);
+                        word_to_upper(name);
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
                 }
                 break;
 
-            case '4':
+            case '4':;
 
-                ;
-                char name[33];
                 do {
 
                     printf("enter a pet name to look up: ");
 
                 } while (!get_bounded_str(name, 32));
+                word_to_upper(name);
                 int result = get_line(table, name);
                 if (result != -1) {
 
