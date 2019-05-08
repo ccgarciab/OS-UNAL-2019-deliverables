@@ -9,9 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cbc9be38-3093-49bc-b2d5-591ed535a4fa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/p1-dogProgram.c" beforeDir="false" afterPath="$PROJECT_DIR$/p1-dogProgram.c" afterDir="false" />
-    </list>
+    <list default="true" id="cbc9be38-3093-49bc-b2d5-591ed535a4fa" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +21,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/p1-dogProgram.c">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
@@ -32,11 +30,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/error_handle.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="29" selection-end-line="11" />
+            <state relative-caret-position="165">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -44,8 +42,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pet_input.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="125" column="33" selection-end-line="133" />
+            <state relative-caret-position="967">
+              <caret line="118" lean-forward="true" selection-start-line="118" selection-end-line="118" />
             </state>
           </provider>
         </entry>
@@ -62,8 +60,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pet_file.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="213" column="39" selection-start-line="213" selection-start-column="39" selection-end-line="213" selection-end-column="39" />
+            <state relative-caret-position="65">
+              <caret line="195" lean-forward="true" selection-start-line="195" selection-end-line="195" />
             </state>
           </provider>
         </entry>
@@ -133,9 +131,9 @@
         <option value="$PROJECT_DIR$/randomStructs.c" />
         <option value="$PROJECT_DIR$/pet_output.c" />
         <option value="$PROJECT_DIR$/pet_hashtable.c" />
-        <option value="$PROJECT_DIR$/error_handle.c" />
         <option value="$PROJECT_DIR$/pet_input.c" />
         <option value="$PROJECT_DIR$/p1-dogProgram.c" />
+        <option value="$PROJECT_DIR$/error_handle.c" />
       </list>
     </option>
   </component>
@@ -217,7 +215,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16828000" />
+    <option name="totallyTimeSpent" value="18433000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
@@ -270,24 +268,10 @@
     <entry file="file://$PROJECT_DIR$/makefile">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/pet_globals.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="13" lean-forward="true" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/randomStructs.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="72" selection-start-line="8" selection-start-column="72" selection-end-line="8" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/error_handle.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="29" selection-end-line="11" />
         </state>
       </provider>
     </entry>
@@ -305,13 +289,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pet_input.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="125" column="33" selection-end-line="133" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pet_input.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -326,17 +303,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pet_file.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="213" column="39" selection-start-line="213" selection-start-column="39" selection-end-line="213" selection-end-column="39" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/9.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/p1-dogProgram.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="63" column="54" selection-start-line="63" selection-start-column="54" selection-end-line="63" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pet_input.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="967">
+          <caret line="118" lean-forward="true" selection-start-line="118" selection-end-line="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pet_file.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="65">
+          <caret line="195" lean-forward="true" selection-start-line="195" selection-end-line="195" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pet_globals.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="13" lean-forward="true" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/error_handle.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
