@@ -1,6 +1,6 @@
 /*Reads all the structures in [db] and records the line
     number for a given linked list in the h-table [table].
-    Returns 0 on success.*/
+    Returns the number of structs loaded on success, -1 otherwise.*/
 int init_table(node *table, FILE *db);
 
 /*Returns the line value for the key [name] in [table],

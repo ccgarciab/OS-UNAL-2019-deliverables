@@ -26,7 +26,10 @@ int main(int argc, char *argv[]) {
     set_total_lines(num_lines);
 
     char opt[2];
-    opt[0] = 'A';
+    char name[33];
+    int ans;
+    opt[0] = '\1';
+    opt[0] = '\0';
     dogType pet;
 
     //Updating IDs sequence number by structs number inside dataDogs.dat
@@ -35,14 +38,16 @@ int main(int argc, char *argv[]) {
 
     do {
 
-        printf("Menu:\n");
+        printf("\nMenu:\n");
         printf("1. Insert a Register\n");
         printf("2. Visualize a Register\n");
         printf("3. Erase a Register\n");
         printf("4. Search a Register\n");
-        printf("5. Quit\n");
+        printf("5. Quit\n\n");
 
         if (!get_bounded_str(opt, 1)) continue;
+
+        printf("\n");
 
         switch (opt[0]) {
 
@@ -51,42 +56,55 @@ int main(int argc, char *argv[]) {
                 pet.doc_id = ++curr_hist;
 
                 fill_pet_info(&pet);
-                int line = get_line(table, pet.name);
+                strcpy(name, pet.name);
+                word_to_upper(name);
+                int line = get_line(table, name);
 
                 pet.next = -1;
 
-                if (line < 0) {
+                printf("\nThis is the register you are about to create:\n\n");
+                print_pet(&pet);
+                ans = confirmation("Do you want to create it?");
 
-                    pet.prev = -1;
-                    line = append_pet(db, &pet);
-                    insert_new_line(table, pet.name, line);
-                } else {
-                    add_pet_from_line(db, &pet, line);
+                if(ans){
+
+                    if (line < 0) {
+
+                        pet.prev = -1;
+                        line = append_pet(db, &pet);
+                        insert_new_line(table, name, line);
+                    } else {
+
+                        add_pet_from_line(db, &pet, line);
+                    }
                 }
                 break;
 
-            case '2':
+            case '2':;
 
-                ;
                 fseek(db, 0, SEEK_END);
 
                 int total_lines = get_total_lines();
 
                 if (total_lines == 0) {
+
                     printf("\nThe Data Base is empty, first insert a register\n\n");
                     break;
                 } else {
+
                     printf("Numbers of Pets inside dataDogs.dat: %d\n", total_lines);
                     int numPet;
 
                     while (1) {
                         if ((numPet = get_int("Please digit the number of register for data visualization: "))) {
+
                             if (numPet > total_lines || numPet == 0) {
-                                printf("\n");
-                                printf("Please insert a number inside the register number of the Data base\n");
-                                printf("\n");
+
+                                printf("\nPlease insert a number inside the register number of the Data base\n\n");
                             } else {
+
                                 dogType *datos = malloc(sizeof(dogType));
+                                if(!datos) sys_error("malloc error\n");
 
                                 fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
                                 int readVeredict = fread(datos, sizeof(dogType), 1, db);
@@ -96,69 +114,54 @@ int main(int argc, char *argv[]) {
                                     exit(-1);
                                 }
 
-                                printf("-------------------------------------------------\n");
-                                printf("Id: %d\n", datos->doc_id);
-                                printf("Name: %s\n", datos->name);
-                                printf("Type:   %s\n", datos->type);
-                                printf("Age:   %i\n", datos->age);
-                                printf("Breed:   %s\n", datos->breed);
-                                printf("Size: %i\n", datos->size);
-                                printf("Weight:   %f\n", datos->weight);
-                                printf("Sex: %c\n", datos->sex);
-                                printf("Next: %d\n", datos->next);
-                                printf("-------------------------------------------------\n");
+                                print_pet(datos);
 
-
-
-                                //////
                                 char path[33], command[38] = "gedit ";
-
 
                                 sprintf(path, "%i.txt", datos->doc_id);
                                 FILE *file = fopen(path, "r");
-//                           FILE *file = NULL;
+
                                 if (file == NULL) {
-                                    printf("The Clinical History is not created, do you want create it? y/n\n");
-                                    char q1[1];
-                                    get_bounded_str(q1, 1);
-                                    if (q1[0] == 'y') {
+
+                                    ans = confirmation("The Clinical History is not created, do you want create it?");
+                                    if (ans) {
+
                                         file = fopen(path, "w+");
                                         if (file == NULL) {
+
                                             sys_error("Writting Error");
                                             exit(-1);
                                         }
 
-                                        fprintf(file, "Id: %i\n", datos->doc_id);
-                                        fprintf(file, "Name: %s\n", datos->name);
-                                        fprintf(file, "Type:   %s\n", datos->type);
-                                        fprintf(file, "Age:   %i\n", datos->age);
-                                        fprintf(file, "Breed:   %s\n", datos->breed);
-                                        fprintf(file, "Size: %i\n", datos->size);
-                                        fprintf(file, "Weight:   %f\n", datos->weight);
-                                        fprintf(file, "Sex: %c\n", datos->sex);
+                                        print_pet(datos);
 
                                         free(datos);
                                         fclose(file);
                                         strcat(command, path);
                                         system(command);
-                                    } else {
+                                    }
+                                    else {
+
                                         break;
                                     }
-                                } else {
-                                    printf("There is a Clinical History existent, do you want see it? y/n\n");
-                                    char q1[1];
-                                    get_bounded_str(q1, 1);
-                                    if (q1[0] == 'y') {
+                                }
+                                else {
+
+                                    ans = confirmation("There is a Clinical History existent, do you want see it?");
+                                    if (ans) {
+
                                         strcat(command, path);
                                         system(command);
                                     }
                                 }
-                                //////
+
                                 free(datos);
                                 break;
                             }
 
-                        } else {
+                        }
+                        else {
+
                             sys_error("Error in Scanf");
                             break;
                         }
@@ -168,27 +171,23 @@ int main(int argc, char *argv[]) {
                 break;
 
             case '3':;
+
                 int n = get_total_lines();
-                printf("Number of pets in dataDogs.dat: %d\n", n);
+                printf("Number of pets in dataDogs.dat: %d\n\n", n);
                 int input = get_int("number of register to delete: ");
+
                 if (input <= 0 || n < input){
+
                     printf("\nInvalid Register Number\n\n");
                     break;
                 }
+
                 input--;
                 dogType d;
                 read_pet_at_line(db, &d, input);
                 print_pet(&d);
-                char yn[2];
-                while (1) {
-                    printf("\nDo you want to delete this pet?(y/n)\n");
-                    if (!get_bounded_str(yn, 1)) continue;
-                    if (yn[0] != 'y' && yn[0] != 'n' && yn[0] != 'Y' && yn[0] != 'N')
-                        continue;
-                    if (yn[0] == 'Y' || yn[0] == 'y' || yn[0] == 'N' || yn[0] == 'n') break;
-
-                }
-                if (yn[0] == 'Y' || yn[0] == 'y') {
+                ans = confirmation("Do you want to delete this pet?");
+                if (ans) {
 
                     delResult dr;
                     dr.update_del = 0;
@@ -196,46 +195,62 @@ int main(int argc, char *argv[]) {
                     del_pet(db, input, &dr);
                     if (dr.update_del) {
 
-                        update_line(table, d.name, dr.newln_del);
+                        strcpy(name, d.name);
+                        word_to_upper(name);
+                        update_line(table, name, dr.newln_del);
                     }
                     if (dr.update_repl) {
 
+                        strcpy(name, dr.word_repl);
+                        word_to_upper(name);
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
-                } else {
-                    break;
                 }
                 break;
 
-            case '4':
+            case '4':;
 
-                ;
-                char name[33];
                 do {
 
                     printf("enter a pet name to look up: ");
 
                 } while (!get_bounded_str(name, 32));
-                int result = get_line(table, name);
-                if (result != -1) {
 
-                    print_list(db, result);
-                } else {
+                char msg[100];
+                strcpy(msg, "confirm search: ");
+		strcat(msg, name);
+                ans = confirmation(msg);
 
-                    printf("pet name not found\n");
+                if (ans) {
+
+                    word_to_upper(name);
+                    int result = get_line(table, name);
+                    if (result != -1) {
+
+                        print_list(db, result);
+                    } else {
+
+                        printf("pet name not found\n");
+                    }
                 }
                 break;
+
+            case '5':
+
+                ans = confirmation("do you want to close the program?");
+                if(ans) opt[0] = '\0';
 
             default:
                 break;
         }
 
-    } while (opt[0] != '5');
+    } while (opt[0]);
 
     int writeVeredict = fclose(db);
 
     if (writeVeredict == EOF) {
         sys_error("fclose error");
     }
+
     printf("\nGood Bye, Dude!\n\n");
 }

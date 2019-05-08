@@ -1,5 +1,5 @@
 /*Struct for collecting all the information to update
-    te h-table after a deletion in the file.*/
+    the h-table after a deletion in the file.*/
 typedef struct delResult{
 
     int update_del;
@@ -9,6 +9,7 @@ typedef struct delResult{
     char word_repl[33];
 } delResult;
 
+/*sets the database-global line counter to [n]*/
 void set_total_lines(int n);
 
 /*Searches the en of the in-disk linked list that starts

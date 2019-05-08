@@ -15,6 +15,7 @@ int get_total_lines(){
     return line_counter;
 }
 
+/*sets the database-global line counter to [n]*/
 void set_total_lines(int n){
 
     line_counter = n;
@@ -42,7 +43,7 @@ void overwrite_last_pet(FILE *db, dogType *new_pet){
         sys_error("fwrite error\n");
 }
 
-
+/*Replaces the pet in a [line] in [db] with [new_pet].*/
 void replace_pet_at_line(FILE *db, dogType *new_pet, int line){
 
     if(fseek(db, line * sizeof(dogType), SEEK_SET) < 0)
@@ -87,6 +88,8 @@ void add_pet_from_line(FILE *db, dogType *pet, int firstln){
         sys_error("fwrite error at add_pet (appending)\n");
 }
 
+/*Sets [pet] previous and next linked elements in it's
+    list to pint each other, ans not [pet].*/
 void bridge_over(FILE *db, dogType *pet){
 
     dogType temp;

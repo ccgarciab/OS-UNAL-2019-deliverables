@@ -131,3 +131,31 @@ int get_int(char *msg) {
 
     return (int) n;
 }
+
+/*Transforms the alphabetic chars in a string to uppercase,
+    in place.*/
+void word_to_upper(char *word){
+
+    for(; *word; word++){
+
+        *word = (char)toupper(*word);
+    }
+}
+
+/*Easily ask for a yes/no question in stdin*/
+int confirmation(char *msg){
+
+    char yn[2] = "";
+
+    while (1) {
+
+        printf("\n%s", msg);
+        printf("(y/n): ");
+        if (!get_bounded_str(yn, 1)) continue;
+        if (yn[0] != 'y' && yn[0] != 'n' && yn[0] != 'Y' && yn[0] != 'N')
+            continue;
+        if (yn[0] == 'Y' || yn[0] == 'y' || yn[0] == 'N' || yn[0] == 'n') break;
+    }
+
+    return yn[0] == 'y' || yn[0] == 'Y';
+}
