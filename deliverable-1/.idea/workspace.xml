@@ -10,13 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cbc9be38-3093-49bc-b2d5-591ed535a4fa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/p1-dogProgram.c" beforeDir="false" afterPath="$PROJECT_DIR$/p1-dogProgram.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pet_file.c" beforeDir="false" afterPath="$PROJECT_DIR$/pet_file.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pet_file.h" beforeDir="false" afterPath="$PROJECT_DIR$/pet_file.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pet_hashtable.c" beforeDir="false" afterPath="$PROJECT_DIR$/pet_hashtable.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pet_input.c" beforeDir="false" afterPath="$PROJECT_DIR$/pet_input.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pet_output.c" beforeDir="false" afterPath="$PROJECT_DIR$/pet_output.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/randomStructs.c" beforeDir="false" afterPath="$PROJECT_DIR$/randomStructs.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/p1-dogProgram.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+            <state relative-caret-position="375">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -41,8 +35,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pet_hashtable.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="57" column="38" selection-start-line="57" selection-start-column="38" selection-end-line="57" selection-end-column="38" />
+            <state relative-caret-position="440">
+              <caret line="90" selection-start-line="75" selection-start-column="4" selection-end-line="90" />
             </state>
           </provider>
         </entry>
@@ -172,17 +166,17 @@
       <workItem from="1557101331492" duration="8746000" />
       <workItem from="1557131170618" duration="4860000" />
       <workItem from="1557289468941" duration="2403000" />
+      <workItem from="1557682783367" duration="56000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24651000" />
+    <option name="totallyTimeSpent" value="25019000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1299" height="743" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2482043" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25219473" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -194,7 +188,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.1009772" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.1009772" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -261,9 +255,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/9.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/9.txt" />
     <entry file="file://$PROJECT_DIR$/pet_input.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="322">
@@ -309,11 +301,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/10000000.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/10000001.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/10000000.txt" />
+    <entry file="file://$PROJECT_DIR$/10000001.txt" />
+    <entry file="file://$PROJECT_DIR$/p1-dogProgram.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/randomStructs.c">
       <provider selected="true" editor-type-id="text-editor">
@@ -322,17 +317,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/p1-dogProgram.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pet_hashtable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="57" column="38" selection-start-line="57" selection-start-column="38" selection-end-line="57" selection-end-column="38" />
+        <state relative-caret-position="440">
+          <caret line="90" selection-start-line="75" selection-start-column="4" selection-end-line="90" />
         </state>
       </provider>
     </entry>
