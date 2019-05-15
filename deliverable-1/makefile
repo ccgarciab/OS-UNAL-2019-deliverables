@@ -1,12 +1,14 @@
+vpath %.c ../src_global
+
 #source files
-SRCS = p1-dogProgram.c pet_input.c pet_hashtable.c pet_output.c error_handle.c pet_file.c
+SRCS = p1-dogProgram.c $(notdir $(wildcard ../src_global/*.c))
 
 #target name
 TARG = dogProgram
 
 #compiler, compile flags, linking flags
 CC = gcc
-OPTS = -Wall -O -Wno-unused-result
+OPTS = -I../include -Wall -O -Wno-unused-result
 #LIBS =
 
 OBJS = $(SRCS:.c=.o)
