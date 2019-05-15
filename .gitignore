@@ -1,6 +1,5 @@
 *.txt
 *.swp
 *.o
-dogProgram
-dognames
-dataDogs.dat
+dog*
+*.dat

@@ -13,6 +13,10 @@ OPTS = -I../include -Wall -O -Wno-unused-result
 
 OBJS = $(SRCS:.c=.o)
 
+program: all tidy
+
+all: $(TARG)
+
 $(TARG): $(OBJS)
 	$(CC) -o $(TARG) $(OBJS) $(LIBS)
 
@@ -22,5 +26,8 @@ $(TARG): $(OBJS)
 d: OPTS += -g
 d: $(TARG)
 
-clean:
-	rm -f $(OBJS) $(TARG)
+tidy:
+	rm -f $(OBJS)
+
+clean: tidy
+	rm -f $(TARG)

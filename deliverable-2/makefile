@@ -2,6 +2,8 @@ vpath %.c ../src_global
 
 #source files
 SRCS = $(notdir $(wildcard ../src_global/*.c))
+SC = p2-dogClient.c $(SRCS)
+SS = p2-dogServer.o $(SRCS)
 
 #target name
 CLIENT = dogClient
@@ -12,9 +14,10 @@ CC = gcc
 OPTS = -I../include -Wall -O -Wno-unused-result
 #LIBS =
 
-OBJS = $(SRCS:.c=.o)
-OBJ_C = p2-dogClient.o $(OBJS)
-OBJ_S = p2-dogServer.o $(OBJS)
+OBJ_C = $(SC:.c=.o)
+OBJ_S = $(SS:.c=.o)
+
+program: all tidy
 
 all: $(SERVER) $(CLIENT)
 
@@ -30,5 +33,8 @@ $(CLIENT): $(OBJ_C)
 d: OPTS += -g
 d: all
 
-clean:
-	rm -f $(OBJS) $(CLIENT) $(SERVER) p2-dogClient.o p2-dogServer.o
+tidy:
+	rm -f $(OBJ_C) $(OBJ_S)
+
+clean: tidy
+	rm -f $(SERVER) $(CLIENT)

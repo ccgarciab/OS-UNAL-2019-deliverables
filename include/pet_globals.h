@@ -2,7 +2,7 @@
 #define PATH "dataDogs.dat"
 
 //size of the hashtable used in memory
-#define T_SIZE 100151
+#define T_SIZE 3001
 
 typedef struct dogType{
 
