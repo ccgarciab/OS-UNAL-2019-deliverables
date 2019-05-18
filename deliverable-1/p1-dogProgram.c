@@ -253,13 +253,13 @@ int main(int argc, char *argv[]) {
             case '5':
 
                 ans = confirmation("do you want to close the program?");
-                if (ans) opt[0] = '\0';
+                if (ans) opt[0] = '\2';
 
             default:
                 break;
         }
 
-    } while (opt[0]);
+    } while (opt[0] != '\2');
 
     int writeVeredict = fclose(db);
 
