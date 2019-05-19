@@ -82,93 +82,76 @@ int main(int argc, char *argv[]) {
 
             case '2':;
 
-                fseek(db, 0, SEEK_END);
-
                 int total_lines = get_total_lines();
 
                 if (total_lines == 0) {
 
                     printf("\nThe Data Base is empty, first insert a register\n\n");
                     break;
-                } else {
+                } 
+                printf("Numbers of Pets inside dataDogs.dat: %d\n", total_lines);
+                
+                int numPet;
 
-                    printf("Numbers of Pets inside dataDogs.dat: %d\n", total_lines);
-                    int numPet;
+                while (1) {
 
-                    while (1) {
-                        if ((numPet = get_int("Please digit the number of register for data visualization: "))) {
+                    numPet = get_int("Please digit the number of register for data visualization: ");
 
-                            if (numPet > total_lines || numPet == 0) {
+                    if (numPet > total_lines || numPet == 0) {
 
-                                printf("\nPlease insert a number inside the register number of the Data base\n\n");
-                            } else {
+                        printf("\nPlease insert a number inside the register number of the Data base\n\n");
+                        continue;
+                    } 
+                    
+                    dogType *datos = malloc(sizeof(dogType));
+                    if (!datos) sys_error("malloc error\n");
 
-                                dogType *datos = malloc(sizeof(dogType));
-                                if (!datos) sys_error("malloc error\n");
+                    read_pet_at_line(db, datos, numPet - 1);
 
-                                fseek(db, (numPet - 1) * sizeof(dogType), SEEK_SET);
-                                int readVeredict = fread(datos, sizeof(dogType), 1, db);
+                    print_pet(datos);
 
-                                if (readVeredict == 0) {
-                                    sys_error("Read Error\n");
-                                }
+                    char path[33], command[39] = "gedit ";
 
-                                print_pet(datos);
+                    sprintf(path, "%i.txt", datos->doc_id);
+                    FILE *file = fopen(path, "r");
 
-                                char path[33], command[38] = "gedit ";
+                    if (file == NULL) {
 
-                                sprintf(path, "%i.txt", datos->doc_id);
-                                FILE *file = fopen(path, "r");
+                        ans = confirmation("The Clinical History is not created, do you want create it?");
+                        if (ans) {
 
-                                if (file == NULL) {
+                            file = fopen(path, "w+");
+                            if (file == NULL) sys_error("Writting Error");
 
-                                    ans = confirmation("The Clinical History is not created, do you want create it?");
-                                    if (ans) {
+                            //print_pet(datos);
+                            fprintf(file, "Name: %s\n", datos->name);
+                            fprintf(file, "Type:   %s\n", datos->type);
+                            fprintf(file, "Age:   %i\n", datos->age);
+                            fprintf(file, "Breed:   %s\n", datos->breed);
+                            fprintf(file, "Size: %i\n", datos->size);
+                            fprintf(file, "Weight:   %f\n", datos->weight);
+                            fprintf(file, "Sex: %c\n", datos->sex);
 
-                                        file = fopen(path, "w+");
-                                        if (file == NULL) {
+                            free(datos);
+                            fclose(file);
+                            strcat(command, path);
+                            system(command);
+                        }
 
-                                            sys_error("Writting Error");
-                                            exit(-1);
-                                        }
+                    } 
+                    else {
 
-                                        //print_pet(datos);
-                                        fprintf(file, "Name: %s\n", datos->name);
-                                        fprintf(file, "Type:   %s\n", datos->type);
-                                        fprintf(file, "Age:   %i\n", datos->age);
-                                        fprintf(file, "Breed:   %s\n", datos->breed);
-                                        fprintf(file, "Size: %i\n", datos->size);
-                                        fprintf(file, "Weight:   %f\n", datos->weight);
-                                        fprintf(file, "Sex: %c\n", datos->sex);
+                        ans = confirmation("There is a Clinical History existent, do you want see it?");
+                        
+                        if (ans) {
 
-                                        free(datos);
-                                        fclose(file);
-                                        strcat(command, path);
-                                        system(command);
-                                    } else {
-
-                                        break;
-                                    }
-                                } else {
-
-                                    ans = confirmation("There is a Clinical History existent, do you want see it?");
-                                    if (ans) {
-
-                                        strcat(command, path);
-                                        system(command);
-                                    }
-                                }
-
-                                free(datos);
-                                break;
-                            }
-
-                        } else {
-
-                            sys_error("Error in Scanf");
-                            break;
+                            strcat(command, path);
+                            system(command);
                         }
                     }
+
+                    free(datos);
+                    break;
                 }
 
                 break;
