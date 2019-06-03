@@ -79,7 +79,40 @@ int main() {
             case '2':
             
                 //TODO NEXT
+                
+                //enviar 2
+                // recibir # structs
+                // mostrar
+                // pedir # a visual
+                //confirmar
+                //enviar # o respuesta negativa
+                //si confirmado recibir struct
+                //mostrar
             
+                break;
+                
+            case '3':
+            
+                // enviar 3
+                // recibir # structs
+                // mostrar
+                // pedir # a operar
+                // enviar #
+                // recv struct
+                // mostrar en pantalla
+                // pedir confirmacion
+                // enviar respuesta
+            
+                break;
+                
+            case '4':
+            
+                // ingresar nombre
+                // enviar 4
+                // enviar nombre (tamaño cte 32)
+                // recv structs, imprime
+                // cuando encuentre terminal, para
+                
                 break;
             
             default:
