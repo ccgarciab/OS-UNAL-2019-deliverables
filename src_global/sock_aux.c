@@ -35,7 +35,9 @@ void recv_full(int sockfd, void *buff, int size) {
     }
 }
 
-
+/*Sends the structs belonging to the linked list that starts
+    in [db]'s [line] line and sends them through [sockfd]. 
+    Then sends a last struct with field sex == 'E'.*/
 void send_pet_list(FILE *db, int sockfd, int line){
 
     dogType pet;

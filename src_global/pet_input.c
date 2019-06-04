@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+
 #include "pet_globals.h"
 
 /*Read a line up to [bound] chars.

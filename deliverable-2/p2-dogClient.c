@@ -109,7 +109,7 @@ int main() {
                 printf("Registers in database: %d\n", nstructs);
                 do{
                 
-                    index = get_int("Insert the register number to visualize: ");
+                    index = get_int("Insert the register number to delete: ");
                 
                 }while(nstructs < index || index == 0);
                 send_full(fd, &index, sizeof(int));
@@ -151,5 +151,6 @@ int main() {
 
     } while (opt[0] != '5');
 
+    shutdown(fd, SHUT_RDWR);
     close(fd);
 }

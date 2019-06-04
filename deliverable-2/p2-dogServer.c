@@ -129,6 +129,9 @@ int main () {
                 line = get_total_lines();
                 send_full(fd_clients[0], &line, sizeof(int));
                 recv_full(fd_clients[0], &line, sizeof(int));
+                
+                line--;
+                
                 read_pet_at_line(db, &pet, line);
                 send_full(fd_clients[0], &pet, sizeof(dogType));
                 recv_full(fd_clients[0], &ans, sizeof(int));
