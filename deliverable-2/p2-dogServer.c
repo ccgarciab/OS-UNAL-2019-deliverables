@@ -61,12 +61,13 @@ int main () {
     int num_lines = init_table(table, db);
     set_total_lines(num_lines);
 
-    for(int i = 0; i < BACKLOG; i++){
+    /*for(int i = 0; i < BACKLOG; i++){
     
         fd_clients[i] = accept(fd, (struct sockaddr*)(clients + i), &sizeClient);
         
-    }
-
+    }*/
+    
+    fd_clients[0] = accept(fd, (struct sockaddr*)(clients), &sizeClient);
     char got;
     char name[33];
     int ans;
@@ -74,6 +75,8 @@ int main () {
 
     //Updating IDs sequence number by structs number inside dataDogs.dat
     curr_hist = ftell(db) / sizeof(dogType);
+    
+    int line;
 
     do{
     
@@ -96,7 +99,7 @@ int main () {
                 word_to_upper(name);
                 pet.next = -1;
                 
-                int line = get_line(table, name);
+                line = get_line(table, name);
                 
                 if (line < 0) {
 
@@ -112,28 +115,66 @@ int main () {
                 
             case '2':
                 
-                //TODO NEXT
-                
-                //enviar # structs
-                //recibir # struct
-                // enviar # struct
+                line = get_total_lines();
+                send_full(fd_clients[0], &line, sizeof(int));
+                recv_full(fd_clients[0], &line, sizeof(int));
+                if(line == -1) break;
+                read_pet_at_line(db, &pet, line - 1);
+                send_full(fd_clients[0], &pet, sizeof(dogType));
                 
                 break;
                 
             case '3':
             
-                // enviar # structs
-                // recv # a operar
-                // enviar struct
-                // recv confirmacion
-                // si confirma borra
+                line = get_total_lines();
+                send_full(fd_clients[0], &line, sizeof(int));
+                recv_full(fd_clients[0], &line, sizeof(int));
+                read_pet_at_line(db, &pet, line);
+                send_full(fd_clients[0], &pet, sizeof(dogType));
+                recv_full(fd_clients[0], &ans, sizeof(int));
+                if (ans) {
+
+                    delResult dr;
+                    dr.update_del = 0;
+                    dr.update_repl = 0;
+                    del_pet(db, line, &dr);
+                    if (dr.update_del) {
+
+                        strcpy(name, pet.name);
+                        word_to_upper(name);
+                        update_line(table, name, dr.newln_del);
+                    }
+                    if (dr.update_repl) {
+
+                        strcpy(name, dr.word_repl);
+                        word_to_upper(name);
+                        update_line(table, dr.word_repl, dr.newln_repl);
+                    }
+                    char fileName[33];
+                    sprintf(fileName, "%d", pet.doc_id);
+                    strcat(fileName, ".txt");
+                    int exist = cfileexists(fileName);
+                    if (exist) {
+                        if (remove(fileName) != 0) sys_error("Unable to delete the clinical history\n\n");
+                    }
+                }
             
                 break;
                 
-            case '4':
+            case '4':;
             
-                // recv nombre (32)
-                // evniar structs
+                char name[33];
+                recv_full(fd_clients[0], name, 33);
+                line = get_line(table, name);
+                if(line != -1){
+                
+                    send_pet_list(db, fd_clients[0], line);
+                }
+                else{
+                
+                    pet.sex = 'E';
+                    send_full(fd_clients[0], &pet, sizeof(dogType));
+                }
                 
                 break;
                 

@@ -1,7 +1,11 @@
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#include "pet_globals.h"
 #include "error_handle.h"
+
+#include "pet_file.h"
 
 /*Sends thru the socket identified with [sockfd] [size] bytes 
     pointed by [buff], making sure to send all*/
@@ -29,4 +33,22 @@ void recv_full(int sockfd, void *buff, int size) {
         if(res == -1) sys_error("receive error");
         received += res;
     }
+}
+
+
+void send_pet_list(FILE *db, int sockfd, int line){
+
+    dogType pet;
+    
+    read_pet_at_line(db, &pet, line);
+    send_full(sockfd, &pet, sizeof(dogType));
+    
+    while (pet.next != -1) {
+
+        read_pet_at_line(db, &pet, pet.next);
+        send_full(sockfd, &pet, sizeof(dogType));
+    }
+    
+    pet.sex = 'E';
+    send_full(sockfd, &pet, sizeof(dogType));
 }

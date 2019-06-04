@@ -44,6 +44,7 @@ int main() {
     opt[0] = '\1';
     opt[0] = '\0';
     dogType pet;
+    int nstructs, index;
 
     do {
 
@@ -78,40 +79,66 @@ int main() {
             
             case '2':
             
-                //TODO NEXT
+                send_full(fd, opt, 1);
+                recv_full(fd, &nstructs, sizeof(int));
+                printf("Registers in database: %d\n", nstructs);
+                do{
                 
-                //enviar 2
-                // recibir # structs
-                // mostrar
-                // pedir # a visual
-                //confirmar
-                //enviar # o respuesta negativa
-                //si confirmado recibir struct
-                //mostrar
+                    index = get_int("Insert the register number to visualize: ");
+                
+                }while(nstructs < index || index == 0);
+                ans = confirmation("are you sure you want to search that index?");
+                if(ans){
+                
+                    send_full(fd, &index, sizeof(int));
+                    recv_full(fd, &pet, sizeof(dogType));
+                    print_pet(&pet);
+                }
+                else {
+                
+                    index = -1;
+                    send_full(fd, &index, sizeof(int));
+                }
             
                 break;
                 
             case '3':
             
-                // enviar 3
-                // recibir # structs
-                // mostrar
-                // pedir # a operar
-                // enviar #
-                // recv struct
-                // mostrar en pantalla
-                // pedir confirmacion
-                // enviar respuesta
+                send_full(fd, opt, 1);
+                recv_full(fd, &nstructs, sizeof(int));
+                printf("Registers in database: %d\n", nstructs);
+                do{
+                
+                    index = get_int("Insert the register number to visualize: ");
+                
+                }while(nstructs < index || index == 0);
+                send_full(fd, &index, sizeof(int));
+                recv_full(fd, &pet, sizeof(dogType));
+                print_pet(&pet);
+                ans = confirmation("are you sure you want to delete this pet?");
+                send_full(fd, &ans, sizeof(int));
             
                 break;
                 
-            case '4':
+            case '4':;
             
-                // ingresar nombre
-                // enviar 4
-                // enviar nombre (tamaño cte 32)
-                // recv structs, imprime
-                // cuando encuentre terminal, para
+                char name[33];
+                do{
+                
+                    printf("Please enter the name of the pet to search: ");
+                    
+                }while(!get_bounded_str(name, 32));
+                ans = confirmation("confirm search");
+                if(!ans) break;
+                word_to_upper(name);
+                send_full(fd, opt, 1);
+                send_full(fd, name, 33);
+                while(1){
+                
+                   recv_full(fd, &pet, sizeof(dogType));
+                   if(pet.sex == 'E') break;
+                   print_pet(&pet);
+                }
                 
                 break;
             
