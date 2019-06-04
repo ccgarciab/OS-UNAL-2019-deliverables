@@ -10,3 +10,9 @@ void recv_full(int sockfd, void *buff, int size);
     in [db]'s [line] line and sends them through [sockfd]. 
     Then sends a last struct with field sex == 'E'.*/
 void send_pet_list(FILE *db, int sockfd, int line);
+
+/*Sends the contents of [file] thru [sockfd] socket*/
+void send_file(FILE *file, int sockfd);
+
+/*Gets bytes thru [sockfd] socket and writes them into [file]*/
+void recv_write_file(FILE *file, int sockfd);

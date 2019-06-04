@@ -7,6 +7,8 @@
 
 #include "pet_file.h"
 
+#define FBUFF 1024
+
 /*Sends thru the socket identified with [sockfd] [size] bytes 
     pointed by [buff], making sure to send all*/
 void send_full(int sockfd, void *buff, int size){
@@ -53,4 +55,62 @@ void send_pet_list(FILE *db, int sockfd, int line){
     
     pet.sex = 'E';
     send_full(sockfd, &pet, sizeof(dogType));
+}
+
+/*Sends the contents of [file] thru [sockfd] socket*/
+void send_file(FILE *file, int sockfd){
+
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    if(ftell < 0) sys_error("ftell in send_file");
+    rewind(file);
+    
+    send_full(sockfd, &size, sizeof(long));
+    
+    if(size == 0) return;
+    
+    long blocks = size / FBUFF;
+    
+    char bindata[FBUFF];
+    int rd = 0;
+    
+    for(int i = 0; i < blocks; i++){
+    
+        rd = fread(bindata, 1, FBUFF, file);
+        if(rd < 0) sys_error("read error sending file");
+        send_full(sockfd, &bindata, FBUFF);
+    }
+    
+    int rest = (int)(size - (blocks * FBUFF));
+    
+    rd = fread(bindata, 1, rest, file);
+    if(rd < 0) sys_error("read error sending file.");
+    send_full(sockfd, &bindata, rest);
+}
+
+/*Gets bytes thru [sockfd] socket and writes them into [file]*/
+void recv_write_file(FILE *file, int sockfd){
+
+    long size;
+    recv_full(sockfd, &size, sizeof(long));
+    
+    if(size == 0) return;
+    
+    long blocks = size / FBUFF;
+    
+    char bindata[FBUFF];
+    int wr = 0;
+    
+    for(int i = 0; i < blocks; i++){
+    
+        wr = fwrite(bindata, 1, FBUFF, file);
+        if(wr < 0) sys_error("write error receiving file");
+        recv_full(sockfd, &bindata, FBUFF);
+    }
+    
+    int rest = (int)(size - (blocks * FBUFF));
+    
+    recv_full(sockfd, &bindata, rest);
+    wr = fwrite(bindata, 1, rest, file);
+    if(wr < 0) sys_error("write error receiving file.");
 }

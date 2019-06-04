@@ -1,14 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include "pet_globals.h"
+
+#include "pet_input.h"
 #include "pet_file.h"
 #include "pet_output.h"
 
 #include "error_handle.h"
 
-#define EDITOR "nano"
+#define EDITOR "nano "
 
 
 /*Prints the fields of the [pet] struct to stdin.*/
@@ -43,21 +48,30 @@ next record: %d\n \
             pet->doc_id, pet->prev, pet->next);
 }
 
-/*Opens a medical record identified with [doc_id]
-    in a text editor.*/
-void open_medical_record(int doc_id) {
+/*Opens a medical record placed at [path] in a text editor.*/
+void open_medical_record(char *path) {
 
     pid_t pid = fork();
 
     if (pid < 0) sys_error("fork failure\n");
 
-    if (pid) return;
+    if (pid){
+        
+        printf("Processing\n");
+        wait(NULL);
+        return;
+    }
 
-    char arg[30];
-    sprintf(arg, "./records/%d", doc_id);
+    char command[39] = EDITOR;
+    strcat(command, path);
 
-    if (execl(EDITOR, arg, NULL))
-        sys_error("exec error\n");
+    printf("executing: %s\n", command);    
+    
+    system(command);
+    
+    printf("Confirm with any key after saving your changes: ");
+    char anyk[2]; 
+    get_bounded_str(anyk, 1);
 }
 
 /*Prints all dogType structs in the same linked list at [db],
@@ -75,4 +89,16 @@ void print_list(FILE *db, int line) {
     }
 
     print_pet(&pet);
+}
+
+/*Puts the basic info of a [pet] in a medical record [file]*/
+void fill_new_mr(FILE *file, dogType *pet){
+
+    fprintf(file, "Name: %s\n", pet->name);
+    fprintf(file, "Type:   %s\n", pet->type);
+    fprintf(file, "Age:   %i\n", pet->age);
+    fprintf(file, "Breed:   %s\n", pet->breed);
+    fprintf(file, "Size: %i\n", pet->size);
+    fprintf(file, "Weight:   %f\n", pet->weight);
+    fprintf(file, "Sex: %c\n", pet->sex);
 }

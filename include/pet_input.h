@@ -15,3 +15,9 @@ int get_int(char *msg);
 
 /*Easily ask for a yes/no question in stdin*/
 int confirmation(char *msg);
+
+/*
+ * Check if a file exist using stat() function
+ * return 1 if the file exist otherwise return 0
+ */
+int cfileexists(const char* filename);

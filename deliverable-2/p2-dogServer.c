@@ -95,6 +95,8 @@ int main () {
                 
                 recv_full(fd_clients[0], &pet, sizeof(dogType));
                 
+                pet.doc_id = ++curr_hist;
+                
                 strcpy(name, pet.name);
                 word_to_upper(name);
                 pet.next = -1;
@@ -121,6 +123,33 @@ int main () {
                 if(line == -1) break;
                 read_pet_at_line(db, &pet, line - 1);
                 send_full(fd_clients[0], &pet, sizeof(dogType));
+                
+                char path[33];
+                sprintf(path, "server/%i.txt", pet.doc_id);
+                FILE *file = fopen(path, "r");
+                int fexists = file != NULL;
+                send_full(fd_clients[0], &fexists, sizeof(int));
+                recv_full(fd_clients[0], &ans, sizeof(int));
+                
+                if(!ans) break;
+                
+                if(!fexists){
+                
+                    file = fopen(path, "w+");
+                    if (file == NULL) sys_error("fopen error server 2");
+                    
+                    fill_new_mr(file, &pet);
+                    fclose(file);
+                    file = fopen(path, "r");
+                    if (file == NULL) sys_error("fopen error server 2");
+                }
+                
+                send_file(file, fd_clients[0]);
+                fclose(file);
+                file = fopen(path, "w");
+                if (file == NULL) sys_error("fopen error server 2");
+                recv_write_file(file, fd_clients[0]);
+                fclose(file);
                 
                 break;
                 
@@ -154,35 +183,34 @@ int main () {
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
                     char fileName[33];
-                    sprintf(fileName, "%d", pet.doc_id);
-                    strcat(fileName, ".txt");
+                    sprintf(fileName, "server/%d.txt", pet.doc_id);
                     int exist = cfileexists(fileName);
                     if (exist) {
                         if (remove(fileName) != 0) sys_error("Unable to delete the clinical history\n\n");
                     }
                 }
-            
+
                 break;
-                
+
             case '4':;
-            
+
                 char name[33];
                 recv_full(fd_clients[0], name, 33);
                 line = get_line(table, name);
                 if(line != -1){
-                
+
                     send_pet_list(db, fd_clients[0], line);
                 }
                 else{
-                
+
                     pet.sex = 'E';
                     send_full(fd_clients[0], &pet, sizeof(dogType));
                 }
-                
+
                 break;
-                
+
             default:
-            
+
                 break;
         }
 
