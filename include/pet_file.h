@@ -30,5 +30,3 @@ int get_total_lines();
 /*Fill the information of a pet from the line # [line]
     in [db] into [pet]*/
 void read_pet_at_line(FILE *db, dogType *pet, int line);
-
-int cfileexists(const char* filename);
