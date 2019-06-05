@@ -33,8 +33,13 @@ $(CLIENT): $(OBJ_C)
 d: OPTS += -g
 d: all
 
+random: error_handle.o
+	$(CC) ../generation/randomStructs.c -o randomStructs error_handle.o $(OPTS)
+	cp ../generation/{breeds,names,types}.txt .
+
 tidy:
 	rm -f $(OBJ_C) $(OBJ_S)
 
 clean: tidy
-	rm -f $(SERVER) $(CLIENT)
+	rm -f $(SERVER) $(CLIENT) randomStructs
+	rm *.txt
