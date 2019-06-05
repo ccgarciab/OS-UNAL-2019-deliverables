@@ -80,6 +80,7 @@
 
 - **fill_new_mr(FILE \*file, dogType \*pet):** Puts the basic info of a [pet] in a medical record [file].
 
+- **output_log(FILE \*file, char \*ipstr, char opt, char \*arg):** Outputs a log of activity to [file] specifying ,among others, the command executed as specified by [opt], the argument [arg] of said command and the ip of the client as specified by [ipstr].
 
 ### Functions in "sock_aux.c":
 
