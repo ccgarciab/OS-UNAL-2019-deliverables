@@ -32,42 +32,12 @@ int err;
 
 node table[T_SIZE];
 int curr_hist = 0;
+FILE *db;
+int num_lines;
 
-int main () {
 
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
+void *client_function(int *fd_client){
 
-    if (fd == -1) sys_error("Socket error");
-
-    server.sin_family = AF_INET;
-    server.sin_port = htons(PORT);
-    server.sin_addr.s_addr = INADDR_ANY;
-    bzero(server.sin_zero, 8);
-    size =  sizeof(struct sockaddr_in);
-
-    err = bind(fd, (struct sockaddr*)&server, size);
-    if (err == -1) sys_error("bind error");
-
-    err = listen(fd, BACKLOG);
-    if (err == -1) sys_error("listen error");
-
-    sizeClient = 0;
-    
-    //Openning dataDogs.dat
-    FILE *db = fopen(PATH, "rb+");
-    if (!db) sys_error("can't open file\n");
-    
-    //hash table init
-    int num_lines = init_table(table, db);
-    set_total_lines(num_lines);
-
-    /*for(int i = 0; i < BACKLOG; i++){
-    
-        fd_clients[i] = accept(fd, (struct sockaddr*)(clients + i), &sizeClient);
-        
-    }*/
-    
-    fd_clients[0] = accept(fd, (struct sockaddr*)(clients), &sizeClient);
     char got;
     char name[33];
     int ans;
@@ -82,7 +52,7 @@ int main () {
     
         do{
         
-            err = recv(fd_clients[0], &got, 1, 0);
+            err = recv(*fd_client, &got, 1, 0);
             if(err == -1) sys_error("receive error");
 
         }while(err == 0);
@@ -93,7 +63,7 @@ int main () {
         
             case '1':
                 
-                recv_full(fd_clients[0], &pet, sizeof(dogType));
+                recv_full(*fd_client, &pet, sizeof(dogType));
                 
                 pet.doc_id = ++curr_hist;
                 
@@ -118,18 +88,18 @@ int main () {
             case '2':
                 
                 line = get_total_lines();
-                send_full(fd_clients[0], &line, sizeof(int));
-                recv_full(fd_clients[0], &line, sizeof(int));
+                send_full(*fd_client, &line, sizeof(int));
+                recv_full(*fd_client, &line, sizeof(int));
                 if(line == -1) break;
                 read_pet_at_line(db, &pet, line - 1);
-                send_full(fd_clients[0], &pet, sizeof(dogType));
+                send_full(*fd_client, &pet, sizeof(dogType));
                 
                 char path[33];
                 sprintf(path, "server/%i.txt", pet.doc_id);
                 FILE *file = fopen(path, "r");
                 int fexists = file != NULL;
-                send_full(fd_clients[0], &fexists, sizeof(int));
-                recv_full(fd_clients[0], &ans, sizeof(int));
+                send_full(*fd_client, &fexists, sizeof(int));
+                recv_full(*fd_client, &ans, sizeof(int));
                 
                 if(!ans) break;
                 
@@ -144,11 +114,11 @@ int main () {
                     if (file == NULL) sys_error("fopen error server 2");
                 }
                 
-                send_file(file, fd_clients[0]);
+                send_file(file, *fd_client);
                 fclose(file);
                 file = fopen(path, "w");
                 if (file == NULL) sys_error("fopen error server 2");
-                recv_write_file(file, fd_clients[0]);
+                recv_write_file(file, *fd_client);
                 fclose(file);
                 
                 break;
@@ -156,14 +126,14 @@ int main () {
             case '3':
             
                 line = get_total_lines();
-                send_full(fd_clients[0], &line, sizeof(int));
-                recv_full(fd_clients[0], &line, sizeof(int));
+                send_full(*fd_client, &line, sizeof(int));
+                recv_full(*fd_client, &line, sizeof(int));
                 
                 line--;
                 
                 read_pet_at_line(db, &pet, line);
-                send_full(fd_clients[0], &pet, sizeof(dogType));
-                recv_full(fd_clients[0], &ans, sizeof(int));
+                send_full(*fd_client, &pet, sizeof(dogType));
+                recv_full(*fd_client, &ans, sizeof(int));
                 if (ans) {
 
                     delResult dr;
@@ -195,16 +165,16 @@ int main () {
             case '4':;
 
                 char name[33];
-                recv_full(fd_clients[0], name, 33);
+                recv_full(*fd_client, name, 33);
                 line = get_line(table, name);
                 if(line != -1){
 
-                    send_pet_list(db, fd_clients[0], line);
+                    send_pet_list(db, *fd_client, line);
                 }
                 else{
 
                     pet.sex = 'E';
-                    send_full(fd_clients[0], &pet, sizeof(dogType));
+                    send_full(*fd_client, &pet, sizeof(dogType));
                 }
 
                 break;
@@ -216,9 +186,62 @@ int main () {
 
     } while(got != '5');
 
-    shutdown(fd_clients[0], SHUT_RDWR);
+}
+
+int main () {
+
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (fd == -1) sys_error("Socket error");
+
+    server.sin_family = AF_INET;
+    server.sin_port = htons(PORT);
+    server.sin_addr.s_addr = INADDR_ANY;
+    bzero(server.sin_zero, 8);
+    size =  sizeof(struct sockaddr_in);
+
+    err = bind(fd, (struct sockaddr*)&server, size);
+    if (err == -1) sys_error("bind error");
+
+    err = listen(fd, BACKLOG);
+    if (err == -1) sys_error("listen error");
+
+
+    //Openning dataDogs.dat
+    db = fopen(PATH, "rb+");
+    if (!db) sys_error("can't open file\n");
+
+    //hash table init
+    num_lines = init_table(table, db);
+    set_total_lines(num_lines);
+
+    for (int i = 0; i < BACKLOG; i++) fd_clients[i] = -1;
+    sizeClient = 0;
+   
+
+    for(int i = 0; i < BACKLOG; i++){
+    
+        fd_clients[i] = accept(fd, (struct sockaddr*)(clients + i), &sizeClient);
+
+        if(fd_clients[i] == -1) sys_error("Connection Error");
+
+	pthread_create(&threads[i], NULL, (void *)client_function, (void *)&fd_clients[i]);
+ 
+        
+        
+    }
+    
+    //fd_clients[0] = accept(fd, (struct sockaddr*)(clients), &sizeClient);
+    
+
+	for (int i = 0; i < BACKLOG; i++) {
+	    int ok = pthread_join(threads[i], NULL);
+	    if (ok != 0) sys_error("Error al hacer join al hilo\n");
+	}
+
+    //shutdown(fd_clients[0], SHUT_RDWR);
     shutdown(fd, SHUT_RDWR);
-    close(fd_clients[0]);
+    //close(fd_clients[0]);
     close(fd);
 
 	return 0;

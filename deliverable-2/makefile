@@ -22,10 +22,10 @@ all: $(SERVER) $(CLIENT)
 program: all tidy
 
 $(SERVER): $(OBJ_S)
-	$(CC) -o $(SERVER) $(OBJ_S) $(LIBS)
+	$(CC) -o $(SERVER) $(OBJ_S) $(LIBS) -lpthread
 
 $(CLIENT): $(OBJ_C)
-	$(CC) -o $(CLIENT) $(OBJ_C) $(LIBS)
+	$(CC) -o $(CLIENT) $(OBJ_C) $(LIBS) -lpthread
 
 %.o: %.c
 	$(CC) $(OPTS) -c $< -o $@
