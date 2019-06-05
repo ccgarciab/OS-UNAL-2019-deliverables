@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "pet_globals.h"
@@ -101,4 +102,52 @@ void fill_new_mr(FILE *file, dogType *pet){
     fprintf(file, "Size: %i\n", pet->size);
     fprintf(file, "Weight:   %f\n", pet->weight);
     fprintf(file, "Sex: %c\n", pet->sex);
+}
+
+
+/*Outputs a log of activity to [file] specifying among others 
+    the command executed specified by [opt], the argument [arg] 
+    of said command and the ip of the client, specified by [ipstr]*/
+void output_log(FILE *file, char *ipstr, char opt, char *arg){
+
+    time_t t = time(NULL);
+    struct tm ltm = *localtime(&t);
+    char log[100];
+
+    sprintf(log, "%d|%02d|%02dT%02d:%02d:%02d Cliente ", 
+        ltm.tm_year + 1900, ltm.tm_mon + 1, ltm.tm_mday,
+        ltm.tm_hour, ltm.tm_min, ltm.tm_sec);
+
+    strcat(log, ipstr);
+
+    switch(opt){
+    
+        case '1':
+
+            strcat(log, " insercion ");
+            break;
+            
+        case '2':
+ 
+            strcat(log, " lectura ");
+            break;
+        
+        case '3':
+
+            strcat(log, " borrado ");
+            break;
+
+        case '4':
+
+            strcat(log, " busqueda ");
+            break;
+
+        default:
+
+            return;
+    }
+    
+    strcat(log, arg);
+    
+    fprintf(file, "%s\n", log);
 }

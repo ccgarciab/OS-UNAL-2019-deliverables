@@ -14,3 +14,8 @@ void open_medical_record(char *path);
 
 /*Puts the basic info of a [pet] in a medical record [file]*/
 void fill_new_mr(FILE *file, dogType *pet);
+
+/*Outputs a log of activity to [file] specifying among others 
+    the command executed specified by [opt], the argument [arg] 
+    of said command and the ip of the client, specified by [ipstr]*/
+void output_log(FILE *file, char *ipstr, char opt, char *arg);
