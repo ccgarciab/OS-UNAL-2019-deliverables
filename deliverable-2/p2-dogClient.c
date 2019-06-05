@@ -1,18 +1,19 @@
+#include <arpa/inet.h>
+#include <errno.h>
 #include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
+#include <strings.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 
 #include "pet_globals.h"
 
-#include "error_handle.h"
 #include "pet_input.h"
 #include "pet_output.h"
+
+#include "error_handle.h"
 #include "sock_aux.h"
 
 #define PORT 3535
