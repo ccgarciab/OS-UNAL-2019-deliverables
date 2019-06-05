@@ -18,6 +18,8 @@ OBJ_C = $(SC:.c=.o)
 OBJ_S = $(SS:.c=.o)
 
 all: $(SERVER) $(CLIENT)
+	mkdir client server &>/dev/null
+	touch dataDogs.dat
 
 program: all tidy
 
@@ -38,8 +40,8 @@ random: error_handle.o
 	cp ../generation/*.txt .
 
 tidy:
-	rm -f $(OBJ_C) $(OBJ_S)
+	rm -f $(OBJ_C) $(OBJ_S) randomStructs
+	rm -f *.txt
 
 clean: tidy
-	rm -f $(SERVER) $(CLIENT) randomStructs
-	rm -f *.txt
+	rm -f $(SERVER) $(CLIENT)

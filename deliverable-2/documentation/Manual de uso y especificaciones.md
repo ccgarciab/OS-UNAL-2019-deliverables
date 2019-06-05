@@ -10,7 +10,7 @@ There are several make targets for your convenience:
 * **make tidy:** like **clean**, but spares the executables.
 * **make program:** builds the project and then deletes object files.
 * **make d:** builds the project with debug symbols for _gdb_ or similar debugers. Run **clean** first.
-* **make random:** get ready to generate 10^6 random registers. After this, just run _randomStructs_. The **clean** target also cleans the results of this step.
+* **make random:** get ready to generate 10^6 random registers. After this, just run _randomStructs_. The **tidy** and **clean** targets also clean the results of this step.
 
 ## Run the project
 
