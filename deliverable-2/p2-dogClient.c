@@ -113,51 +113,51 @@ int main() {
                 }
                 ans = confirmation(pmt);
                 send_full(fd, &ans, sizeof(int));
-                
+
                 if(!ans) break;
-                
+
                 char path[33];
                 sprintf(path, "client/%i.temp", pet.doc_id);
                 FILE *file = fopen(path, "w+");
                 if (file == NULL) sys_error("fopen error client 2");
-                
+
                 recv_write_file(file, fd);
                 fclose(file);
                 open_medical_record(path);
                 file = fopen(path, "r");
                 send_file(file, fd);
                 fclose(file);
-                
+
                 //if (cfileexists(path) && (remove(path) != 0))
                 //    sys_error("tmp file removal error");
 
                 break;
-                
+
             case '3':
-            
+
                 send_full(fd, opt, 1);
                 recv_full(fd, &nstructs, sizeof(int));
                 printf("Registers in database: %d\n", nstructs);
                 do{
-                
+
                     index = get_int("Insert the register number to delete: ");
-                
+
                 }while(nstructs < index || index == 0);
                 send_full(fd, &index, sizeof(int));
                 recv_full(fd, &pet, sizeof(dogType));
                 print_pet(&pet);
                 ans = confirmation("are you sure you want to delete this pet?");
                 send_full(fd, &ans, sizeof(int));
-            
+
                 break;
-                
+
             case '4':;
-            
+
                 char name[33];
                 do{
-                
+
                     printf("Please enter the name of the pet to search: ");
-                    
+
                 }while(!get_bounded_str(name, 32));
                 ans = confirmation("confirm search");
                 if(!ans) break;
@@ -165,15 +165,15 @@ int main() {
                 send_full(fd, opt, 1);
                 send_full(fd, name, 33);
                 while(1){
-                
+
                    recv_full(fd, &pet, sizeof(dogType));
                    if(pet.sex == 'E') break;
                    print_pet(&pet);
                 }
-                
+
                 break;
-            
-            default:
+
+            case '5':
 
                 send_full(fd, opt, 1);
 
