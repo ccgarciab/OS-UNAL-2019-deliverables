@@ -60,9 +60,6 @@ void *client_function(void *argp){
     
     char str_ip[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, arg->ip, str_ip, INET_ADDRSTRLEN);
-
-    //Updating IDs sequence number by structs number inside dataDogs.dat
-    curr_hist = ftell(db) / sizeof(dogType);
     
     int line;
 
@@ -244,6 +241,9 @@ int main () {
     //hash table init
     num_lines = init_table(table, db);
     set_total_lines(num_lines);
+    
+    //Updating IDs sequence number by structs number inside dataDogs.dat
+    curr_hist = num_lines;
     
     //Opening log file
     logfile = fopen(LOGPATH, "a+");
