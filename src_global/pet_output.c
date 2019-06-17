@@ -57,7 +57,7 @@ void open_medical_record(char *path) {
     if (pid < 0) sys_error("fork failure\n");
 
     if (pid){
-        
+
         printf("Processing\n");
         wait(NULL);
         return;
@@ -66,12 +66,12 @@ void open_medical_record(char *path) {
     char command[39] = EDITOR;
     strcat(command, path);
 
-    printf("executing: %s\n", command);    
-    
+    printf("executing: %s\n", command);
+
     system(command);
-    
-    printf("Confirm with any key after saving your changes: ");
-    char anyk[2]; 
+
+    printf("Press the <RETURN> key to continue");
+    char anyk[2];
     get_bounded_str(anyk, 1);
 }
 
@@ -121,17 +121,17 @@ void output_log(FILE *file, char *ipstr, char opt, char *arg){
     strcat(log, ipstr);
 
     switch(opt){
-    
+
         case '1':
 
             strcat(log, " insercion ");
             break;
-            
+
         case '2':
- 
+
             strcat(log, " lectura ");
             break;
-        
+
         case '3':
 
             strcat(log, " borrado ");
@@ -146,8 +146,8 @@ void output_log(FILE *file, char *ipstr, char opt, char *arg){
 
             return;
     }
-    
+
     strcat(log, arg);
-    
+
     fprintf(file, "%s\n", log);
 }
