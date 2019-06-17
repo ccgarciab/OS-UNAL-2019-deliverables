@@ -212,7 +212,7 @@ void *client_function(void *argp){
 
     } while(got != '5');
 
-    return NULL;
+    pthread_exit(NULL);
 }
 
 int main () {
@@ -233,7 +233,6 @@ int main () {
     err = listen(fd, BACKLOG);
     if (err == -1) sys_error("listen error");
 
-
     //Openning dataDogs.dat
     db = fopen(PATH, "rb+");
     if (!db) sys_error("can't open file\n");
@@ -251,7 +250,17 @@ int main () {
 
     for (int i = 0; i < BACKLOG; i++) fd_clients[i] = -1;
     sizeClient = 0;
-   
+
+    pthread_attr_t thread_params;
+
+    err = pthread_attr_init(&thread_params);
+    if(err) sys_error("Threads attribute init");
+
+    err = pthread_attr_setstacksize(&thread_params, 1024 * 16);
+    if(err) sys_error("Setting pthread stack size parameter");
+
+    err = pthread_attr_setdetachstate(&thread_params, PTHREAD_CREATE_DETACHED);
+    if(err) sys_error("Making threads detached");
 
     for(int i = 0; i < BACKLOG; i++){
     
@@ -262,15 +271,8 @@ int main () {
         threadarg arg;
         arg.ip = &ip;
         arg.fd = fd_clients[i];
-        pthread_create(&threads[i], NULL, (void *)client_function, (void *)&arg);
+        pthread_create(&threads[i], &thread_params, (void *)client_function, (void *)&arg);
     }
-    
-
-	for (int i = 0; i < BACKLOG; i++) {
-	
-	    int ok = pthread_join(threads[i], NULL);
-	    if (ok != 0) sys_error("Error al hacer join al hilo\n");
-	}
 
     //shutdown(fd_clients[0], SHUT_RDWR);
     shutdown(fd, SHUT_RDWR);
