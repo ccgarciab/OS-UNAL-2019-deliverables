@@ -48,7 +48,7 @@ FILE *db;
 FILE *logfile;
 int num_lines;
 
-/*MODES: 1 == Semaphore, 2 == mutex, 3 == Pipe*/
+/*MODES: 1 == Semaphore, 2 == Mutex, 3 == Pipe*/
 #define mode 1
 
 #if mode == 1
@@ -64,6 +64,7 @@ int num_lines;
 lock_t resource_lock[2];
 lock_t medrec_lock[2];
 lock_t currhist_lock[2];
+lock_t log_lock[2];
 
 void init_lock(lock_t *lock_p){
 
@@ -152,15 +153,16 @@ void *client_function(void *argp){
                 
                 recv_full(fd_client, &pet, sizeof(dogType));
                 
-                //curr hist
+                hold_lock(currhist_lock);
                 pet.doc_id = ++curr_hist;
+                release_lock(currhist_lock);
                 
                 strcpy(name, pet.name);
                 strcpy(logarg, name);
                 word_to_upper(name);
                 pet.next = -1;
                 
-                //todo
+                hold_lock(resource_lock);
                 line = get_line(table, name);
                 
                 if (line < 0) {
@@ -172,28 +174,33 @@ void *client_function(void *argp){
 
                     add_pet_from_line(db, &pet, line);
                 }
-                //hasta acá
+                release_lock(resource_lock);
                 
                 
                 break;
                 
             case '2':
-                //ini
+                
+                hold_lock(resource_lock);
                 line = get_total_lines();
-                //fin
+                release_lock(resource_lock);
+
                 send_full(fd_client, &line, sizeof(int));
                 recv_full(fd_client, &line, sizeof(int));
                 if(line == -1) break;
-                //ini
+                
+                hold_lock(resource_lock);
                 read_pet_at_line(db, &pet, line - 1);
-                //fin
+                release_lock(resource_lock);
+
                 send_full(fd_client, &pet, sizeof(dogType));
                 
                 sprintf(logarg, "%d", line);
                 
                 char path[33];
                 sprintf(path, "server/%i.txt", pet.doc_id);
-                //ini2
+                
+                hold_lock(medrec_lock);
                 FILE *file = fopen(path, "r");
                 int fexists = file != NULL;
                 send_full(fd_client, &fexists, sizeof(int));
@@ -211,36 +218,43 @@ void *client_function(void *argp){
                     file = fopen(path, "r");
                     if (file == NULL) sys_error("fopen error server 2");
                 }
-                //fin2
+                release_lock(medrec_lock);
+
+                hold_lock(medrec_lock);
                 send_file(file, fd_client);
                 fclose(file);
+                release_lock(medrec_lock);
+                
+                hold_lock(medrec_lock);
                 file = fopen(path, "w");
                 if (file == NULL) sys_error("fopen error server 2");
-                //ini2
                 recv_write_file(file, fd_client);
-                //fin2
                 fclose(file);
+                release_lock(medrec_lock);
                 
                 break;
                 
             case '3':
             
-                //ini
+                hold_lock(resource_lock);
                 line = get_total_lines();
-                //fin
+                release_lock(resource_lock);
+
                 send_full(fd_client, &line, sizeof(int));
                 recv_full(fd_client, &line, sizeof(int));
                 
                 sprintf(logarg, "%d", line);
                 
                 line--;
-                //ini
+
+                hold_lock(resource_lock);
                 read_pet_at_line(db, &pet, line);
-                //fin
+                release_lock(resource_lock);
+
                 send_full(fd_client, &pet, sizeof(dogType));
                 recv_full(fd_client, &ans, sizeof(int));
                 if (ans) {
-                    //ini
+                    hold_lock(resource_lock);
                     delResult dr;
                     dr.update_del = 0;
                     dr.update_repl = 0;
@@ -256,15 +270,17 @@ void *client_function(void *argp){
                         word_to_upper(dr.word_repl);
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
-                    //fin
+                    release_lock(resource_lock);
+
                     char fileName[33];
                     sprintf(fileName, "server/%d.txt", pet.doc_id);
-                    //ini
+
+                    hold_lock(medrec_lock);
                     int exist = cfileexists(fileName);
                     if (exist) {
                         if (remove(fileName) != 0) sys_error("Unable to delete the clinical history\n\n");
                     }
-                    //fin
+                    release_lock(medrec_lock);
                 }
 
                 break;
@@ -278,9 +294,9 @@ void *client_function(void *argp){
                 
                 line = get_line(table, name);
                 if(line != -1){
-                    //ini
+                    hold_lock(resource_lock);
                     send_pet_list(db, fd_client, line);
-                    //fin
+                    release_lock(resource_lock);
                 }
                 else{
 
@@ -294,12 +310,13 @@ void *client_function(void *argp){
 
                 break;
         }
-        //ini
+
+        hold_lock(log_lock);
         output_log(logfile, str_ip, got, logarg);
         fclose(logfile);
         logfile = fopen(LOGPATH, "a+");
         if(!logfile) sys_error("cant open logfile again");
-        //fin
+        release_lock(log_lock);
 
     } while(got != '5');
 
@@ -311,6 +328,7 @@ int main () {
     init_lock(resource_lock);
     init_lock(medrec_lock);
     init_lock(currhist_lock);
+    init_lock(log_lock);
 
     int fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -377,6 +395,7 @@ int main () {
     destroy_lock(resource_lock);
     destroy_lock(medrec_lock);
     destroy_lock(currhist_lock);
+    destroy_lock(log_lock);
 
 	return 0;
 }
