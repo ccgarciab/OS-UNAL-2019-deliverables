@@ -24,6 +24,9 @@
 #define BACKLOG 32
 #define LOGPATH "serverDogs.log"
 
+#undef PATH
+#define PATH "../dataDogs.dat"
+
 /*Structure to pass as argument to threads*/
 typedef struct threadarg{
 

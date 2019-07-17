@@ -26,7 +26,7 @@ void set_total_lines(int n) {
 void read_pet_at_line(FILE *db, dogType *pet, int line) {
 
     if (fseek(db, line * sizeof(dogType), SEEK_SET) < 0)
-        sys_error("fseek error\n");
+        sys_error("fseek error at read_pet\n");
 
     if (!fread(pet, sizeof(dogType), 1, db))
         sys_error("fread error\n");
@@ -37,7 +37,7 @@ void read_pet_at_line(FILE *db, dogType *pet, int line) {
 void overwrite_last_pet(FILE *db, dogType *new_pet) {
 
     if (fseek(db, -1 * sizeof(dogType), SEEK_CUR) < 0)
-        sys_error("fseek error\n");
+        sys_error("fseek error at overwrite_pet\n");
 
     if (!fwrite(new_pet, sizeof(dogType), 1, db))
         sys_error("fwrite error\n");
