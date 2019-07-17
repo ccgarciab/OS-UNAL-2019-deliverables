@@ -81,6 +81,7 @@ void *client_function(void *argp){
                 
                 recv_full(fd_client, &pet, sizeof(dogType));
                 
+                //curr hist
                 pet.doc_id = ++curr_hist;
                 
                 strcpy(name, pet.name);
@@ -88,6 +89,7 @@ void *client_function(void *argp){
                 word_to_upper(name);
                 pet.next = -1;
                 
+                //todo
                 line = get_line(table, name);
                 
                 if (line < 0) {
@@ -99,22 +101,28 @@ void *client_function(void *argp){
 
                     add_pet_from_line(db, &pet, line);
                 }
+                //hasta acá
+                
                 
                 break;
                 
             case '2':
-                
+                //ini
                 line = get_total_lines();
+                //fin
                 send_full(fd_client, &line, sizeof(int));
                 recv_full(fd_client, &line, sizeof(int));
                 if(line == -1) break;
+                //ini
                 read_pet_at_line(db, &pet, line - 1);
+                //fin
                 send_full(fd_client, &pet, sizeof(dogType));
                 
                 sprintf(logarg, "%d", line);
                 
                 char path[33];
                 sprintf(path, "server/%i.txt", pet.doc_id);
+                //ini2
                 FILE *file = fopen(path, "r");
                 int fexists = file != NULL;
                 send_full(fd_client, &fexists, sizeof(int));
@@ -132,31 +140,36 @@ void *client_function(void *argp){
                     file = fopen(path, "r");
                     if (file == NULL) sys_error("fopen error server 2");
                 }
-                
+                //fin2
                 send_file(file, fd_client);
                 fclose(file);
                 file = fopen(path, "w");
                 if (file == NULL) sys_error("fopen error server 2");
+                //ini2
                 recv_write_file(file, fd_client);
+                //fin2
                 fclose(file);
                 
                 break;
                 
             case '3':
             
+                //ini
                 line = get_total_lines();
+                //fin
                 send_full(fd_client, &line, sizeof(int));
                 recv_full(fd_client, &line, sizeof(int));
                 
                 sprintf(logarg, "%d", line);
                 
                 line--;
-                
+                //ini
                 read_pet_at_line(db, &pet, line);
+                //fin
                 send_full(fd_client, &pet, sizeof(dogType));
                 recv_full(fd_client, &ans, sizeof(int));
                 if (ans) {
-
+                    //ini
                     delResult dr;
                     dr.update_del = 0;
                     dr.update_repl = 0;
@@ -172,12 +185,15 @@ void *client_function(void *argp){
                         word_to_upper(dr.word_repl);
                         update_line(table, dr.word_repl, dr.newln_repl);
                     }
+                    //fin
                     char fileName[33];
                     sprintf(fileName, "server/%d.txt", pet.doc_id);
+                    //ini
                     int exist = cfileexists(fileName);
                     if (exist) {
                         if (remove(fileName) != 0) sys_error("Unable to delete the clinical history\n\n");
                     }
+                    //fin
                 }
 
                 break;
@@ -191,8 +207,9 @@ void *client_function(void *argp){
                 
                 line = get_line(table, name);
                 if(line != -1){
-
+                    //ini
                     send_pet_list(db, fd_client, line);
+                    //fin
                 }
                 else{
 
@@ -206,11 +223,12 @@ void *client_function(void *argp){
 
                 break;
         }
-        
+        //ini
         output_log(logfile, str_ip, got, logarg);
         fclose(logfile);
         logfile = fopen(LOGPATH, "a+");
         if(!logfile) sys_error("cant open logfile again");
+        //fin
 
     } while(got != '5');
 
