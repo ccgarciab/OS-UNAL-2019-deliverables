@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <string.h>
 #include <strings.h>
 #include <stdio.h>
@@ -24,9 +25,6 @@
 #define BACKLOG 32
 #define LOGPATH "serverDogs.log"
 
-#undef PATH
-#define PATH "../dataDogs.dat"
-
 /*Structure to pass as argument to threads*/
 typedef struct threadarg{
 
@@ -42,6 +40,7 @@ socklen_t sizeClient;
 int fd_clients[BACKLOG];
 pthread_t threads[BACKLOG];
 int err;
+char guard = 't';
 
 node table[T_SIZE];
 int curr_hist = 0;
@@ -49,6 +48,78 @@ FILE *db;
 FILE *logfile;
 int num_lines;
 
+/*MODES: 1 == Semaphore, 2 == mutex, 3 == Pipe*/
+#define mode 1
+
+#if mode == 1
+#define lock_t sem_t
+#elif mode == 2
+#define lock_t pthread_mutex_t
+#elif mode == 3
+#define lock_t int
+#else
+#error "Define mode between 1 and 3"
+#endif
+
+lock_t resource_lock[2];
+lock_t medrec_lock[2];
+lock_t currhist_lock[2];
+
+void init_lock(lock_t *lock_p){
+
+    int err =
+                #if mode == 1
+                sem_init(lock_p, 0, 1);
+                #elif mode == 2
+                pthread_mutex_init(lock_p, NULL);
+                #elif mode == 3
+                pipe(lock_p); write(lock_p[1], &guard, 1);
+                #endif
+              
+    if(err) sys_error("Lock initialization error");
+}
+
+void hold_lock(lock_t *lock_p){
+
+    int err =
+                #if mode == 1
+                sem_wait(lock_p);
+                #elif mode == 2
+                pthread_mutex_lock(lock_p);
+                #elif mode == 3
+                read(lock_p[0], &guard, 1);
+                #endif
+                
+    if(err) sys_error("Locking error");
+}
+
+void release_lock(lock_t *lock_p){
+
+    int err =
+                #if mode == 1
+                sem_post(lock_p);
+                #elif mode == 2
+                pthread_mutex_unlock(lock_p);
+                #elif mode == 3
+                write(lock_p[1], &guard, 1);
+                #endif
+                
+    if(err) sys_error("Unlocking error");
+}
+
+void destroy_lock(lock_t *lock_p){
+
+    int err =
+                #if mode == 1
+                sem_destroy(lock_p);
+                #elif mode == 2
+                pthread_mutex_destroy(lock_p);
+                #elif mode == 3
+                close(lock_p[0]) | close(lock_p[1]);
+                #endif
+                
+    if(err) sys_error("Destroy lock error");
+}
 
 void *client_function(void *argp){
 
@@ -237,6 +308,10 @@ void *client_function(void *argp){
 
 int main () {
 
+    init_lock(resource_lock);
+    init_lock(medrec_lock);
+    init_lock(currhist_lock);
+
     int fd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (fd == -1) sys_error("Socket error");
@@ -298,6 +373,10 @@ int main () {
     shutdown(fd, SHUT_RDWR);
     //close(fd_clients[0]);
     close(fd);
+
+    destroy_lock(resource_lock);
+    destroy_lock(medrec_lock);
+    destroy_lock(currhist_lock);
 
 	return 0;
 }

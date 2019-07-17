@@ -19,7 +19,7 @@ SERVER = dogServer
 #compiler, compile flags, linking flags
 CC = gcc
 OPTS = -I../include -Wall -O -Wno-unused-result
-LIBS = -lpthread
+LIBS = -lpthread -lrt
 
 OBJ_C = $(SRCS_C:.c=.o)
 OBJ_S = $(SRCS_S:.c=.o)
