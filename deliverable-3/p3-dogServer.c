@@ -49,73 +49,73 @@ FILE *logfile;
 int num_lines;
 
 /*MODES: 1 == Semaphore, 2 == Mutex, 3 == Pipe*/
-#define mode 3
+#define MODE 1
 
-#if mode == 1
-#define lock_t sem_t
-#elif mode == 2
-#define lock_t pthread_mutex_t
-#elif mode == 3
-#define lock_t int
+#if MODE == 1
+#define lock_type sem_t
+#elif MODE == 2
+#define lock_type pthread_mutex_t
+#elif MODE == 3
+#define lock_type int
 #else
-#error "Define mode between 1 and 3"
+#error "Define MODE between 1 and 3"
 #endif
 
-lock_t resource_lock[2];
-lock_t medrec_lock[2];
-lock_t currhist_lock[2];
-lock_t log_lock[2];
+lock_type resource_lock[2];
+lock_type medrec_lock[2];
+lock_type currhist_lock[2];
+lock_type log_lock[2];
 
-void init_lock(lock_t *lock_p){
+void init_lock(lock_type *lock_p){
 
     int err =
-                #if mode == 1
+                #if MODE == 1
                 sem_init(lock_p, 0, 1);
-                #elif mode == 2
+                #elif MODE == 2
                 pthread_mutex_init(lock_p, NULL);
-                #elif mode == 3
+                #elif MODE == 3
                 pipe(lock_p); write(lock_p[1], &guard, 1);
                 #endif
               
     if(err) sys_error("Lock initialization error");
 }
 
-void hold_lock(lock_t *lock_p){
+void hold_lock(lock_type *lock_p){
 
     int err =
-                #if mode == 1
+                #if MODE == 1
                 sem_wait(lock_p);
-                #elif mode == 2
+                #elif MODE == 2
                 pthread_mutex_lock(lock_p);
-                #elif mode == 3
-                read(lock_p[0], &guard, 1);
+                #elif MODE == 3
+                !(read(lock_p[0], &guard, 1) + 1);
                 #endif
                 
     if(err) sys_error("Locking error");
 }
 
-void release_lock(lock_t *lock_p){
+void release_lock(lock_type *lock_p){
 
     int err =
-                #if mode == 1
+                #if MODE == 1
                 sem_post(lock_p);
-                #elif mode == 2
+                #elif MODE == 2
                 pthread_mutex_unlock(lock_p);
-                #elif mode == 3
-                write(lock_p[1], &guard, 1);
+                #elif MODE == 3
+                !(write(lock_p[1], &guard, 1) + 1);
                 #endif
                 
     if(err) sys_error("Unlocking error");
 }
 
-void destroy_lock(lock_t *lock_p){
+void destroy_lock(lock_type *lock_p){
 
     int err =
-                #if mode == 1
+                #if MODE == 1
                 sem_destroy(lock_p);
-                #elif mode == 2
+                #elif MODE == 2
                 pthread_mutex_destroy(lock_p);
-                #elif mode == 3
+                #elif MODE == 3
                 close(lock_p[0]) | close(lock_p[1]);
                 #endif
                 
