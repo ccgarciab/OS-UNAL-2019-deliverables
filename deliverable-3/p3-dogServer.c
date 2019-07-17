@@ -49,7 +49,7 @@ FILE *logfile;
 int num_lines;
 
 /*MODES: 1 == Semaphore, 2 == Mutex, 3 == Pipe*/
-#define mode 1
+#define mode 3
 
 #if mode == 1
 #define lock_t sem_t
@@ -206,7 +206,11 @@ void *client_function(void *argp){
                 send_full(fd_client, &fexists, sizeof(int));
                 recv_full(fd_client, &ans, sizeof(int));
                 
-                if(!ans) break;
+                if(!ans){
+                
+                    release_lock(medrec_lock);
+                    break;
+                }
                 
                 if(!fexists){
                 

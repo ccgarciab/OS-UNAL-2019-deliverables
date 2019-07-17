@@ -29,7 +29,7 @@ void read_pet_at_line(FILE *db, dogType *pet, int line) {
         sys_error("fseek error at read_pet\n");
 
     if (!fread(pet, sizeof(dogType), 1, db))
-        sys_error("fread error\n");
+        sys_error("fread error at read_pet_at_line\n");
 }
 
 /*Overwrites the structure immediately before the file
@@ -215,7 +215,7 @@ int append_pet(FILE *db, dogType *pet) {
         sys_error("fseek error at append_pet\n");
 
     if (!fwrite(pet, sizeof(dogType), 1, db))
-        sys_error("fread error\n");
+        sys_error("fread error at append_pet\n");
 
     line_counter++;
 

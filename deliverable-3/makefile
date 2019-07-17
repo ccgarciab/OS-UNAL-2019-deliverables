@@ -49,6 +49,10 @@ random: error_handle.o
 tidy:
 	rm -f $(OBJ_C) $(OBJ_S) randomStructs
 	rm -f *.txt
+	rm -f ./client/*.txt
 
 clean: tidy
 	rm -f $(SERVER) $(CLIENT)
+	rm -f ./server/*.txt
+	rm -f *.dat
+	rm -f *.log
